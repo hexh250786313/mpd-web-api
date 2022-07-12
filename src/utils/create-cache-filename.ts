@@ -1,3 +1,6 @@
+import createHash from './create-hash'
+import path from 'node:path'
+
 /**
  * Creates a cache filename
  */
