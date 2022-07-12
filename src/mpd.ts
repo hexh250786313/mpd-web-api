@@ -6,7 +6,10 @@ type AnyClient = any
 
 const mpd: Mpd = {
   async register({ router, subscribe, send }) {
-    const client = await mpdApi.connect({ host: 'mpd', port: 6600 })
+    // const client = await mpdApi.connect({ host: 'mpd', port: 6600 })
+    const client = await mpdApi.connect({ host: '127.0.0.1', port: 6600 })
+    // const client = await mpdApi.connect({ host: 'localhost', port: 6600 })
+
     const unsubscribe = subscribe((data) => {
       console.debug('TODO', 'mpd subscription', data)
     })

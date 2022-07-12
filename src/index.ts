@@ -1,8 +1,10 @@
 import { createApp } from './app'
+import type { Configuration } from './types'
 
-function main() {
+async function main() {
+  const config: Configuration = null
   try {
-    createApp()
+    await createApp(config)
   } catch (error) {
     console.error(error)
     process.exit(1)

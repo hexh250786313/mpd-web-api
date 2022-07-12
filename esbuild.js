@@ -1,4 +1,32 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+const { readFileSync } = require('fs')
+const { extname, dirname: _dirname } = require('path')
+
+const nodeModules = new RegExp(
+  /^(?:.*[\\/])?node_modules(?:\/(?!postgres-migrations).*)?$/
+)
+
+const dirnamePlugin = {
+  name: 'dirname',
+
+  setup(build) {
+    build.onLoad({ filter: /.*/ }, ({ path: filePath }) => {
+      // if (/.*mpd-api.*/g.test(filePath)) {
+      let contents = readFileSync(filePath, 'utf8')
+      const loader = extname(filePath).substring(1)
+      const dirname = _dirname(filePath)
+      contents = contents
+        .replace('__dirname', `"${dirname}"`)
+        .replace('__filename', `"${filePath}"`)
+      return {
+        contents,
+        loader,
+      }
+      // }
+    })
+  },
+}
+
 async function start(watch) {
   await require('esbuild').build({
     entryPoints: ['src/index.ts'],
@@ -10,6 +38,7 @@ async function start(watch) {
     platform: 'node',
     target: 'node10.12',
     outfile: 'lib/index.js',
+    plugins: [dirnamePlugin],
   })
 }
 
