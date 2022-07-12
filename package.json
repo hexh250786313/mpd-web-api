@@ -10,6 +10,7 @@
     "build": "node esbuild.js",
     "prepare": "husky install && yarn clean && node esbuild.js"
   },
+  "types": "./typings/index.d.ts",
   "lint-staged": {
     "*.{js,jsx,ts,tsx,cjs,mjs}": [
       "eslint --fix",
@@ -36,6 +37,7 @@
   "homepage": "https://github.com/hexh250786313/mpd-web-api#readme",
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",
+    "@types/express-ws": "^3.0.1",
     "@types/node": "^18.0.3",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.30.6",
@@ -48,5 +50,10 @@
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
     "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "express": "^4.18.1",
+    "express-ws": "^5.0.2",
+    "mpd-api": "^1.1.1"
   }
 }
