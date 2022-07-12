@@ -1,0 +1,52 @@
+{
+  "name": "mpd-web-api",
+  "version": "0.0.0-development",
+  "description": "Api for web-based mpd client",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "clean": "rimraf lib",
+    "watch": "node esbuild.js --watch",
+    "build": "node esbuild.js",
+    "prepare": "husky install && yarn clean && node esbuild.js"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,cjs,mjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,less,sass,scss}": [
+      "prettier --write"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hexh250786313/mpd-web-api.git"
+  },
+  "keywords": [
+    "mpd",
+    "web",
+    "api"
+  ],
+  "author": "hexh <250786313@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hexh250786313/mpd-web-api/issues"
+  },
+  "homepage": "https://github.com/hexh250786313/mpd-web-api#readme",
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.1",
+    "@types/node": "^18.0.3",
+    "@typescript-eslint/eslint-plugin": "^5.30.6",
+    "@typescript-eslint/parser": "^5.30.6",
+    "esbuild": "^0.14.49",
+    "eslint": "^8.19.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.7.4"
+  }
+}

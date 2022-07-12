@@ -1,2 +1,3 @@
 # mpd-web-api
-Apis for web-based mpd client.
+
+Api for web-based mpd client.
