@@ -7,8 +7,8 @@ type AnyClient = any
 const mpd: Mpd = {
   async register({ router, subscribe, send }) {
     // const client = await mpdApi.connect({ host: 'mpd', port: 6600 })
-    const client = await mpdApi.connect({ host: '127.0.0.1', port: 6600 })
     // const client = await mpdApi.connect({ host: 'localhost', port: 6600 })
+    const client = await mpdApi.connect({ host: '127.0.0.1', port: 6600 })
 
     const unsubscribe = subscribe((data) => {
       console.debug('TODO', 'mpd subscription', data)
@@ -29,7 +29,13 @@ const mpd: Mpd = {
       router.post(
         route,
         wrapped(async ({ req, res }) => {
-          const args = req.body || []
+          console.log(`New request at: ${Date.now()}`)
+          console.table({
+            body: JSON.stringify(req.body),
+            method: req.method,
+            url: req.url,
+          })
+          const args = Array.isArray(req?.body?.fnArgs) ? req.body.fnArgs : []
           const fn = (client.api as AnyClient)[ns][name]
           const result = await fn(...args)
           res.json(result)

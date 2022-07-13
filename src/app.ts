@@ -71,6 +71,8 @@ export async function createApp(config: Configuration) {
     subscribe,
   })
 
+  app.use(router)
+
   app.ws('/', (ws) => {
     ws.on('message', (msg) => {
       const { channel, data } = JSON.parse(msg.toString())
