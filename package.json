@@ -8,7 +8,8 @@
     "clean": "rimraf lib",
     "watch": "node esbuild.js --watch",
     "build": "node esbuild.js",
-    "prepare": "husky install && yarn clean && node esbuild.js"
+    "prepare": "husky install && yarn clean && yarn build",
+    "start": "yarn && node lib/index.js"
   },
   "types": "./typings/index.d.ts",
   "lint-staged": {

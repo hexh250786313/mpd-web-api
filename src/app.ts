@@ -113,5 +113,7 @@ export async function createApp(config: Configuration) {
     }
   })
 
-  app.listen(8080, () => console.log('Listening'))
+  const port = process.env.PORT || 8080
+
+  app.listen(port, () => console.log('Listening on port', port))
 }
