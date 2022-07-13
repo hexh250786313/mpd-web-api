@@ -9,7 +9,7 @@ Most codes are from [andersevenrud/mycardashpoc](https://github.com/andersevenru
 ```shell
 git clone https://github.com/hexh250786313/mpd-web-api
 cd mpd-web-api
-yarn start # or PORT=8980 yarn start
+yarn start # http://localhost:8080 or "PORT=8980 yarn start" to use port 8980
 ```
 
 ## API
