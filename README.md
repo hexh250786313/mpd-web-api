@@ -102,122 +102,122 @@ Every API corresponds to one of mpd-api function, see this: https://github.com/c
    ```
 
 | API                                     |
-| --------------------------------------- | --- |
-| /c2c/list                               | ,   |
-| /c2c/subscribe                          | ,   |
-| /c2c/unsubscribe                        | ,   |
-| /c2c/sendMessage                        | ,   |
-| /c2c/readMessages                       | ,   |
-| /connection/close                       | ,   |
-| /connection/kill                        | ,   |
-| /connection/ping                        | ,   |
-| /connection/getTagTypes                 | ,   |
-| /connection/enableTagTypes              | ,   |
-| /connection/disableTagTypes             | ,   |
-| /connection/clearTagTypes               | ,   |
-| /connection/enableAllTagTypes           | ,   |
-| /connection/binarylimit                 | ,   |
-| /db/listall                             | ,   |
-| /db/listallinfo                         | ,   |
-| /db/list                                | ,   |
-| /db/count                               | ,   |
-| /db/find                                | ,   |
-| /db/findadd                             | ,   |
-| /db/search                              | ,   |
-| /db/searchadd                           | ,   |
-| /db/searchaddpl                         | ,   |
-| /db/lsinfo                              | ,   |
-| /db/songinfo                            | ,   |
-| /db/listfiles                           | ,   |
-| /db/readcomments                        | ,   |
-| /db/rescan                              | ,   |
-| /db/update                              | ,   |
-| /db/getfingerprint                      | ,   |
-| /db/albumart                            | ,   |
-| /db/albumartWhole                       | ,   |
-| /db/readpicture                         | ,   |
-| /db/readpictureWhole                    | ,   |
-| /mounts/list                            | ,   |
-| /mounts/listNeighbors                   | ,   |
-| /mounts/mount                           | ,   |
-| /mounts/unmount                         | ,   |
-| /outputs/list                           | ,   |
-| /outputs/enable                         | ,   |
-| /outputs/disable                        | ,   |
-| /outputs/toggle                         | ,   |
-| /outputs/set                            | ,   |
-| /partition/list                         | ,   |
-| /partition/create                       | ,   |
-| /partition/switchTo                     | ,   |
-| /partition/delete                       | ,   |
-| /partition/moveOutputToCurrentPartition | ,   |
-| /playback/next                          | ,   |
-| /playback/prev                          | ,   |
-| /playback/pause                         | ,   |
-| /playback/resume                        | ,   |
-| /playback/toggle                        | ,   |
-| /playback/play                          | ,   |
-| /playback/playid                        | ,   |
-| /playback/stop                          | ,   |
-| /playback/seekcur                       | ,   |
-| /playback/seek                          | ,   |
-| /playback/seekid                        | ,   |
-| /playback/getvol                        | ,   |
-| /playback/consume                       | ,   |
-| /playback/crossfade                     | ,   |
-| /playback/mixrampdb                     | ,   |
-| /playback/mixrampdelay                  | ,   |
-| /playback/random                        | ,   |
-| /playback/repeat                        | ,   |
-| /playback/single                        | ,   |
-| /playback/setvol                        | ,   |
-| /playback/setReplayGain                 | ,   |
-| /playback/getReplayGain                 | ,   |
-| /playlists/get                          | ,   |
-| /playlists/list                         | ,   |
-| /playlists/listinfo                     | ,   |
-| /playlists/load                         | ,   |
-| /playlists/add                          | ,   |
-| /playlists/clear                        | ,   |
-| /playlists/deleteAt                     | ,   |
-| /playlists/move                         | ,   |
-| /playlists/rename                       | ,   |
-| /playlists/remove                       | ,   |
-| /playlists/save                         | ,   |
-| /queue/add                              | ,   |
-| /queue/addid                            | ,   |
-| /queue/clear                            | ,   |
-| /queue/info                             | ,   |
-| /queue/id                               | ,   |
-| /queue/delete                           | ,   |
-| /queue/deleteid                         | ,   |
-| /queue/move                             | ,   |
-| /queue/moveid                           | ,   |
-| /queue/find                             | ,   |
-| /queue/search                           | ,   |
-| /queue/prio                             | ,   |
-| /queue/prioid                           | ,   |
-| /queue/shuffle                          | ,   |
-| /queue/swap                             | ,   |
-| /queue/swapid                           | ,   |
-| /queue/addtagid                         | ,   |
-| /queue/cleartagid                       | ,   |
-| /queue/getChanges                       | ,   |
-| /queue/getChangesPosId                  | ,   |
-| /queue/rangeid                          | ,   |
-| /reflection/config                      | ,   |
-| /reflection/commands                    | ,   |
-| /reflection/notcommands                 | ,   |
-| /reflection/urlhandlers                 | ,   |
-| /reflection/decoders                    | ,   |
-| /status/get                             | ,   |
-| /status/clearerror                      | ,   |
-| /status/currentsong                     | ,   |
-| /status/stats                           | ,   |
-| /sticker/list                           | ,   |
-| /sticker/set                            | ,   |
-| /sticker/get                            | ,   |
-| /sticker/delete                         | ,   |
-| /sticker/deleteAll                      | ,   |
-| /sticker/find                           | ,   |
-| /sticker/search                         | ,   |
+| --------------------------------------- |
+| /c2c/list                               |
+| /c2c/subscribe                          |
+| /c2c/unsubscribe                        |
+| /c2c/sendMessage                        |
+| /c2c/readMessages                       |
+| /connection/close                       |
+| /connection/kill                        |
+| /connection/ping                        |
+| /connection/getTagTypes                 |
+| /connection/enableTagTypes              |
+| /connection/disableTagTypes             |
+| /connection/clearTagTypes               |
+| /connection/enableAllTagTypes           |
+| /connection/binarylimit                 |
+| /db/listall                             |
+| /db/listallinfo                         |
+| /db/list                                |
+| /db/count                               |
+| /db/find                                |
+| /db/findadd                             |
+| /db/search                              |
+| /db/searchadd                           |
+| /db/searchaddpl                         |
+| /db/lsinfo                              |
+| /db/songinfo                            |
+| /db/listfiles                           |
+| /db/readcomments                        |
+| /db/rescan                              |
+| /db/update                              |
+| /db/getfingerprint                      |
+| /db/albumart                            |
+| /db/albumartWhole                       |
+| /db/readpicture                         |
+| /db/readpictureWhole                    |
+| /mounts/list                            |
+| /mounts/listNeighbors                   |
+| /mounts/mount                           |
+| /mounts/unmount                         |
+| /outputs/list                           |
+| /outputs/enable                         |
+| /outputs/disable                        |
+| /outputs/toggle                         |
+| /outputs/set                            |
+| /partition/list                         |
+| /partition/create                       |
+| /partition/switchTo                     |
+| /partition/delete                       |
+| /partition/moveOutputToCurrentPartition |
+| /playback/next                          |
+| /playback/prev                          |
+| /playback/pause                         |
+| /playback/resume                        |
+| /playback/toggle                        |
+| /playback/play                          |
+| /playback/playid                        |
+| /playback/stop                          |
+| /playback/seekcur                       |
+| /playback/seek                          |
+| /playback/seekid                        |
+| /playback/getvol                        |
+| /playback/consume                       |
+| /playback/crossfade                     |
+| /playback/mixrampdb                     |
+| /playback/mixrampdelay                  |
+| /playback/random                        |
+| /playback/repeat                        |
+| /playback/single                        |
+| /playback/setvol                        |
+| /playback/setReplayGain                 |
+| /playback/getReplayGain                 |
+| /playlists/get                          |
+| /playlists/list                         |
+| /playlists/listinfo                     |
+| /playlists/load                         |
+| /playlists/add                          |
+| /playlists/clear                        |
+| /playlists/deleteAt                     |
+| /playlists/move                         |
+| /playlists/rename                       |
+| /playlists/remove                       |
+| /playlists/save                         |
+| /queue/add                              |
+| /queue/addid                            |
+| /queue/clear                            |
+| /queue/info                             |
+| /queue/id                               |
+| /queue/delete                           |
+| /queue/deleteid                         |
+| /queue/move                             |
+| /queue/moveid                           |
+| /queue/find                             |
+| /queue/search                           |
+| /queue/prio                             |
+| /queue/prioid                           |
+| /queue/shuffle                          |
+| /queue/swap                             |
+| /queue/swapid                           |
+| /queue/addtagid                         |
+| /queue/cleartagid                       |
+| /queue/getChanges                       |
+| /queue/getChangesPosId                  |
+| /queue/rangeid                          |
+| /reflection/config                      |
+| /reflection/commands                    |
+| /reflection/notcommands                 |
+| /reflection/urlhandlers                 |
+| /reflection/decoders                    |
+| /status/get                             |
+| /status/clearerror                      |
+| /status/currentsong                     |
+| /status/stats                           |
+| /sticker/list                           |
+| /sticker/set                            |
+| /sticker/get                            |
+| /sticker/delete                         |
+| /sticker/deleteAll                      |
+| /sticker/find                           |
+| /sticker/search                         |
