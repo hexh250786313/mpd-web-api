@@ -9,7 +9,7 @@ Most codes are from [andersevenrud/mycardashpoc](https://github.com/andersevenru
 ```shell
 git clone https://github.com/hexh250786313/mpd-web-api
 cd mpd-web-api
-yarn start
+yarn start # or PORT=8980 yarn start
 ```
 
 ## API
