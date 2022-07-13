@@ -8,7 +8,7 @@ import type { Configuration, MpdSubscriber, WebSocketPacketData } from './types'
 /**
  * Exception abstraction for Express routes.
  */
-class RequestError extends Error {
+export class RequestError extends Error {
   status: number
   constructor(status: number, message: string) {
     super(message)

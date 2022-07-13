@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from 'express'
+import { RequestError } from '../app'
 
 interface WrappedContext {
   req: Request
@@ -17,6 +18,10 @@ function wrapped(fn: WrappedFunction) {
       await fn({ req, res, next })
     } catch (e) {
       console.error('Route exception', e)
+      res.json({
+        code: (e as RequestError).status || 500,
+        message: 'Failed: ' + e,
+      })
       next(e)
     }
   }

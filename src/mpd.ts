@@ -38,7 +38,11 @@ const mpd: Mpd = {
           const args = Array.isArray(req?.body?.fnArgs) ? req.body.fnArgs : []
           const fn = (client.api as AnyClient)[ns][name]
           const result = await fn(...args)
-          res.json(result)
+          res.json({
+            code: 200,
+            message: 'OK',
+            data: result,
+          })
         })
       )
     })
