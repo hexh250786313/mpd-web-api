@@ -51,6 +51,22 @@ export async function createApp(config: Configuration) {
 
   let callback: MpdSubscriber
 
+  // app.all('*', function (req, res, next) {
+  // res.header('Access-Control-Allow-Credentials', 'true')
+  // res.header('Access-Control-Allow-Origin', req.headers.origin || '*')
+  // res.header(
+  // 'Access-Control-Allow-Headers',
+  // 'X-Requested-With, Content-Type, Accept'
+  // )
+  // res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
+  // // res.header('X-Powered-By', ' 3.2.1')
+  // res.header('Content-Type', 'application/json;charset=utf-8')
+  // next()
+  // if (req.method == 'OPTIONS') {
+  // res.sendStatus(200)
+  // }
+  // })
+
   app.use(express.json())
 
   const router = express.Router()
@@ -62,6 +78,17 @@ export async function createApp(config: Configuration) {
       process.exit(0)
     }
   }
+
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Credentials', 'true')
+    res.header('Access-Control-Allow-Origin', req.headers.origin || '*')
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Accept')
+    if (req.method == 'OPTIONS') {
+      res.sendStatus(200)
+    } else {
+      next()
+    }
+  })
 
   const shutdown = await mpd.register({
     app,
