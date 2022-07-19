@@ -39,6 +39,9 @@ const mpd: Mpd = {
         if (message && message?.channel === 'mpd' && message?.packet) {
           switch (message.packet) {
             case 'report': {
+              if (statusInterval) {
+                clearInterval(statusInterval)
+              }
               statusInterval = setInterval(() => {
                 client.api.status.get().then((data) => {
                   send('status', data)
