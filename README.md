@@ -12,11 +12,11 @@ cd mpd-web-api
 yarn start # http://localhost:8080 or "PORT=8980 yarn start" to use port 8980
 ```
 
-## API
+## Http API
+
+All http APIs are listed [below](#apis).
 
 ### Request & Response
-
-All API are exposed POST requests.
 
 #### Request
 
@@ -61,11 +61,9 @@ All API are exposed POST requests.
 
 ### API calls example
 
-It depends on [mpd-api](https://github.com/cotko/mpd-api)
-
 Every API corresponds to one of mpd-api function, see this: https://github.com/cotko/mpd-api#api
 
-1. In [mpd-api](https://github.com/cotko/mpd-api#api) find the corresponding function, for example `/db/search`, the corresponding function is `db.search`
+1. Find the corresponding function in [mpd-api](https://github.com/cotko/mpd-api#api), for example `/db/search`, the corresponding function is `db.search`
 2. Pass parameters. `db.search` accepts a string parameter, for example `db.search('(artist contains "Empire")')`, the API request would be:
 
    ```javascript
@@ -101,7 +99,39 @@ Every API corresponds to one of mpd-api function, see this: https://github.com/c
    mock('http://127.0.0.1:8080/db/search')(['(artist contains "Empire")'])
    ```
 
-| API                                     |
+## WebSocket
+
+Connect to websocket server: `ws://localhost:8080/status`
+
+### status
+
+Use below message to fire `status` event.
+
+```typescript
+wsConn.send(JSON.stringify({ channel: 'mpd', packet: 'report' }))
+```
+
+It sends current mpd status data every 1 second.
+
+And use `deport` to stop sending.
+
+```typescript
+wsConn.send(JSON.stringify({ channel: 'mpd', packet: 'deport' }))
+```
+
+You can get message like this:
+
+```typescript
+const message = {
+  channel: 'mpd',
+  packet: 'status',
+  data: MpdStatusObj,
+}
+```
+
+## APIs
+
+| POST API                                |
 | --------------------------------------- |
 | /c2c/list                               |
 | /c2c/subscribe                          |

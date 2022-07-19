@@ -1,22 +1,70 @@
-import mpdApi from 'mpd-api'
+import type { RawData } from 'ws'
 import type { Mpd } from './types'
+
+import mpdApi from 'mpd-api'
 import { wrapped } from './utils'
 
 type AnyClient = any
 
+function getMessage(message?: string | RawData) {
+  let data: any
+  try {
+    data = JSON.parse(JSON.parse(message!.toString()))
+  } catch (e) {
+    data = undefined
+  }
+  return data
+}
+
 const mpd: Mpd = {
-  async register({ router, subscribe, send }) {
-    // const client = await mpdApi.connect({ host: 'mpd', port: 6600 })
-    // const client = await mpdApi.connect({ host: 'localhost', port: 6600 })
+  async register({ app, router, subscribe, send }) {
     const client = await mpdApi.connect({ host: '127.0.0.1', port: 6600 })
 
-    const unsubscribe = subscribe((data) => {
-      console.debug('TODO', 'mpd subscription', data)
+    let statusInterval = null as NodeJS.Timer | null
+
+    const unsubscribe = subscribe((message) => {
+      message = getMessage(message)
+      if (message?.channel === 'mpd' && message?.packet) {
+        const { packet, data } = message
+        console.log({ packet, data })
+        if (packet === 'status') {
+          // do something
+        }
+      }
     })
-    const statusInterval = setInterval(async () => {
-      const data = await client.api.status.get()
-      send('status', data)
+
+    app.ws('/status', (ws) => {
+      ws.on('message', (msg) => {
+        const message = getMessage(msg)
+        if (message && message?.channel === 'mpd' && message?.packet) {
+          switch (message.packet) {
+            case 'report': {
+              statusInterval = setInterval(() => {
+                client.api.status.get().then((data) => {
+                  send('status', data)
+                })
+              }, 1000)
+              break
+            }
+            case 'deport': {
+              if (statusInterval) {
+                clearInterval(statusInterval)
+              }
+              break
+            }
+            default: {
+              break
+            }
+          }
+        }
+      })
+      ws.on('close', () => {
+        if (statusInterval) {
+          clearInterval(statusInterval)
+        }
+      })
     })
+
     const names = Object.keys(client.api).flatMap((ns) => {
       return Object.keys((client.api as AnyClient)[ns]).map((name) => [
         ns,
@@ -48,7 +96,9 @@ const mpd: Mpd = {
     })
 
     return async () => {
-      clearInterval(statusInterval)
+      if (statusInterval) {
+        clearInterval(statusInterval)
+      }
       unsubscribe()
       await client.api.connection.close()
     }
