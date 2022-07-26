@@ -3,6 +3,7 @@ import type { Mpd } from './types'
 
 import mpdApi from 'mpd-api'
 import { wrapped } from './utils'
+import { routesHandler } from './routes'
 
 type AnyClient = any
 
@@ -74,28 +75,11 @@ const mpd: Mpd = {
         name,
       ])
     })
+    names.push(['db', 'about'])
     names.forEach(([ns, name]) => {
       const route = `/${ns}/${name}`
 
-      router.post(
-        route,
-        wrapped(async ({ req, res }) => {
-          console.log(`New request at: ${Date.now()}`)
-          console.table({
-            body: JSON.stringify(req.body),
-            method: req.method,
-            url: req.url,
-          })
-          const args = Array.isArray(req?.body?.fnArgs) ? req.body.fnArgs : []
-          const fn = (client.api as AnyClient)[ns][name]
-          const result = await fn(...args)
-          res.json({
-            code: 200,
-            message: 'OK',
-            data: result,
-          })
-        })
-      )
+      router.post(route, wrapped(routesHandler(client, route)))
     })
 
     return async () => {

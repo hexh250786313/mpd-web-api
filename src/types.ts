@@ -24,3 +24,5 @@ export interface MpdContext {
 export interface Mpd {
   register: (ctx: MpdContext) => Promise<ShutdownFunction>
 }
+
+export type AnyClient = any

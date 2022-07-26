@@ -7,7 +7,7 @@ interface WrappedContext {
   next: NextFunction
 }
 
-type WrappedFunction = (ctx: WrappedContext) => Promise<void>
+export type WrappedFunction = (ctx: WrappedContext) => Promise<void>
 
 /**
  * Async Express route error handler
