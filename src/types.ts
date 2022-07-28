@@ -14,15 +14,15 @@ export type MpdUnsubscriber = () => void
 export type MpdPublisher = (pkg: string, data?: any) => void
 
 export interface MpdContext {
-  app: Application
-  router: Router
-  subscribe: (fn: MpdSubscriber) => MpdUnsubscriber
-  send: MpdPublisher
-  config: Configuration
+    app: Application
+    router: Router
+    subscribe: (fn: MpdSubscriber) => MpdUnsubscriber
+    send: MpdPublisher
+    config: Configuration
 }
 
 export interface Mpd {
-  register: (ctx: MpdContext) => Promise<ShutdownFunction>
+    register: (ctx: MpdContext) => Promise<ShutdownFunction>
 }
 
 export type AnyClient = any

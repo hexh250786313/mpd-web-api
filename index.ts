@@ -1,31 +1,31 @@
 import { $fetch as fetch, FetchOptions } from 'ohmyfetch'
 
 const mock = function (url: string) {
-  if (!url) {
-    throw new Error('Url required!')
-  }
-
-  const _fetch = async (args?: any) => {
-    const rawBody = { fnArgs: args ?? [] }
-    const opts: FetchOptions = {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json, text/plain, */*',
-      },
-      credentials: 'include',
-      mode: 'cors',
-      cache: 'no-cache',
-      body: JSON.stringify(rawBody),
+    if (!url) {
+        throw new Error('Url required!')
     }
 
-    return fetch(url, opts).then((res) => {
-      console.log(res)
-      console.log(res.data.directory[0])
-    })
-  }
+    const _fetch = async (args?: any) => {
+        const rawBody = { fnArgs: args ?? [] }
+        const opts: FetchOptions = {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json, text/plain, */*',
+            },
+            credentials: 'include',
+            mode: 'cors',
+            cache: 'no-cache',
+            body: JSON.stringify(rawBody),
+        }
 
-  return _fetch
+        return fetch(url, opts).then((res) => {
+            console.log(res)
+            console.log(res.data.directory[0])
+        })
+    }
+
+    return _fetch
 }
 
 /** 专辑列表 */

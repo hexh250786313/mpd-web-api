@@ -6,22 +6,22 @@ import type { Readable } from 'node:stream'
  * Basic file cache writer/reader
  */
 async function cacheFile(
-  filename: string,
-  content: () => Promise<Buffer>
+    filename: string,
+    content: () => Promise<Buffer>
 ): Promise<Readable> {
-  const dest = createCacheFilename(filename)
+    const dest = createCacheFilename(filename)
 
-  const exists = await fs.promises
-    .access(dest, fs.constants.F_OK)
-    .then(() => true)
-    .catch(() => false)
+    const exists = await fs.promises
+        .access(dest, fs.constants.F_OK)
+        .then(() => true)
+        .catch(() => false)
 
-  if (!exists) {
-    const data = await content()
-    await fs.promises.writeFile(dest, data)
-  }
+    if (!exists) {
+        const data = await content()
+        await fs.promises.writeFile(dest, data)
+    }
 
-  return fs.createReadStream(dest)
+    return fs.createReadStream(dest)
 }
 
 export default cacheFile
