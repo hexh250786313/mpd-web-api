@@ -18,11 +18,15 @@ class Locals {
         const year = new Date().getFullYear()
         const isCORSEnabled = process.env.CORS_ENABLED || true
         const apiPrefix = process.env.API_PREFIX || 'mpd'
+        const nativeApiPrefix = process.env.NATIVE_API_PREFIX || 'native'
+        const webApiPrefix = process.env.WEB_API_PREFIX || 'web'
         const logDays = process.env.LOG_DAYS || 10
         const mpdUrl = process.env.MPD_URL || `http://localhost:6600`
 
         return {
             apiPrefix,
+            nativeApiPrefix,
+            webApiPrefix,
             isCORSEnabled,
             port,
             url,

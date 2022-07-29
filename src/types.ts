@@ -1,6 +1,9 @@
 import type { Router } from 'express'
 import type { Application } from 'express-ws'
 
+export type ValueType<T extends Record<any, any>> = T[keyof T]
+export type KeysOfUnion<T> = T extends T ? keyof T : never
+
 export type Configuration = any
 
 export type WebSocketPacketData = any

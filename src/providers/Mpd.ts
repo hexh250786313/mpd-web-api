@@ -2,11 +2,17 @@ import type { MPDApi } from 'mpd-api'
 
 import Locals from './Locals'
 import mpdApi from 'mpd-api'
+import Log from '../middlewares/Log'
+import { Router } from 'express'
+import NativeController from '../controllers/Api/Native'
+import { ValueType } from '../types'
 
-type AnyClient = any
+export type IMpdNativeRoute = ValueType<{
+    [t in keyof MPDApi.APIS]: [t, keyof MPDApi.APIS[t]]
+}>
 
 class Mpd {
-    client: MPDApi.ClientAPI | null = null
+    public client: MPDApi.ClientAPI | null = null
     host: string
     port: number
 
@@ -19,17 +25,49 @@ class Mpd {
             parseInt(Locals.config().mpdUrl.replace(/(^.*:)/g, ''))
     }
 
-    public async connect() {
-        this.client = await mpdApi.connect({ host: this.host, port: this.port })
+    private getNames<T extends keyof MPDApi.APIS>(): IMpdNativeRoute[] {
+        if (this.client) {
+            const names = (Object.keys(this.client!.api) as Array<T>).flatMap(
+                (ns) => {
+                    return (
+                        Object.keys(this.client!.api[ns]) as Array<
+                            keyof MPDApi.APIS[T]
+                        >
+                    ).map((name) => [ns, name] as IMpdNativeRoute)
+                }
+            )
+
+            return names
+        }
+        return []
     }
 
-    public names() {
-        const names = Object.keys(this.client!.api).flatMap((ns) => {
-            return Object.keys((this.client!.api as AnyClient)[ns]).map(
-                (name) => [ns, name]
-            )
+    private async connect() {
+        try {
+            this.client = await mpdApi.connect({
+                host: this.host,
+                port: this.port,
+            })
+            Log.info('Mpd :: Connected')
+        } catch (e) {
+            Log.error('Mpd :: ' + e)
+        }
+    }
+
+    public getNativeRouter() {
+        const names = this.getNames()
+        const router = Router()
+
+        names.forEach(([ns, name]) => {
+            const route = `/${ns}/${name}`
+            router.post(route, NativeController.perform)
         })
-        console.log('---------', names)
+
+        return router
+    }
+
+    public async init() {
+        await this.connect()
     }
 }
 

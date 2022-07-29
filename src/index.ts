@@ -12,14 +12,12 @@
 // }
 
 import App from './providers/App'
-import Mpd from './providers/Mpd'
 
 async function main() {
     try {
-        Mpd.connect().then(() => {
-            App.loadConfiguration()
-            App.loadServer()
-        })
+        App.loadConfiguration()
+        App.loadServer()
+        App.loadMpdClient()
     } catch (error) {
         console.error(error)
         process.exit(1)

@@ -37,13 +37,22 @@ class Handler {
         Log.error(err.stack)
 
         if (req.xhr) {
-            return res.status(500).send({ error: 'Something went wrong!' })
+            return res.status(500).send({ error: err.stack })
         } else {
+            res.json({
+                code: err.status || 500,
+                message: 'Failed: ' + err,
+            })
             return next(err)
         }
     }
 
-    public static errorHandler(err: any, req: Request, res: Response): any {
+    public static errorHandler(
+        err: any,
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): any {
         Log.error(err.stack)
         res.status(500)
 
@@ -64,10 +73,7 @@ class Handler {
             })
         }
 
-        return res.render('pages/error', {
-            error: err.stack,
-            title: 'Under Maintenance',
-        })
+        return next(err)
     }
 
     public static logErrors(

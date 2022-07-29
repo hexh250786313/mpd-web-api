@@ -3,10 +3,11 @@ import Log from '../middlewares/Log'
 import * as dotenv from 'dotenv'
 import Express from './Express'
 import { existsSync } from 'node:fs'
+import Mpd from './Mpd'
 
 class App {
     public loadConfiguration(): void {
-        Log.info('Configuration :: Booting @ Master...')
+        Log.info('Configuration :: Booting ...')
 
         if (existsSync(resolve('.env'))) {
             dotenv.config({
@@ -16,9 +17,17 @@ class App {
     }
 
     public loadServer(): void {
-        Log.info('Server :: Booting @ Master...')
+        Log.info('Server :: Booting ...')
 
         Express.init()
+    }
+
+    public async loadMpdClient(): Promise<void> {
+        Log.info('Mpd :: Connecting ...')
+
+        await Mpd.init()
+        Express.mountNativeRoutes()
+        Express.mountNotFoundHandler()
     }
 }
 
