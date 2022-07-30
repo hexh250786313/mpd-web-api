@@ -1,4 +1,4 @@
-import type { Application } from 'express'
+import type { Application as WSApplication } from 'express-ws'
 import type { CorsOptions } from 'cors'
 
 import cors from 'cors'
@@ -6,7 +6,7 @@ import cors from 'cors'
 import Log from './Log'
 
 class CORS {
-    public mount(_express: Application): Application {
+    public mount(_express: WSApplication): WSApplication {
         Log.info("Booting the 'CORS' middleware...")
 
         // _express.use((req, res, next) => {
@@ -25,7 +25,7 @@ class CORS {
                 callback(null, a)
             },
             credentials: true,
-            optionsSuccessStatus: 200, // 204 No content default
+            optionsSuccessStatus: 200, // default: 204 No content
         } as CorsOptions
 
         _express.use(cors(options))

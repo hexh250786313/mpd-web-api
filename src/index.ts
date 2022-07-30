@@ -18,6 +18,7 @@ async function main() {
         App.loadConfiguration()
         App.loadServer()
         App.loadMpdClient()
+        App.loadServerErrorHandler()
     } catch (error) {
         console.error(error)
         process.exit(1)

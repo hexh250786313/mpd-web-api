@@ -1,10 +1,11 @@
-import type { Application, NextFunction, Request, Response } from 'express'
+import type { NextFunction, Request, Response } from 'express'
+import type { Application as WSApplication } from 'express-ws'
 
 import Log from '../middlewares/Log'
 import Locals from '../providers/Locals'
 
 class Handler {
-    public static notFoundHandler(_express: Application): any {
+    public static notFoundHandler(_express: WSApplication): any {
         const apiPrefix = Locals.config().apiPrefix
 
         _express.use('*', (req: Request, res: Response) => {

@@ -27,7 +27,11 @@ class App {
 
         await Mpd.init()
         Express.mountNativeRoutes()
+    }
+
+    public loadServerErrorHandler(): void {
         Express.mountNotFoundHandler()
+        Express.mountErrorHandler()
     }
 }
 

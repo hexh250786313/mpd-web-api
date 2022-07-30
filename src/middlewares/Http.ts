@@ -1,10 +1,10 @@
-import type { Application } from 'express'
+import type { Application as WSApplication } from 'express-ws'
 
 import express from 'express'
 import Log from './Log'
 
 class Http {
-    public static mount(_express: Application): Application {
+    public static mount(_express: WSApplication): WSApplication {
         Log.info("Booting the 'HTTP' middleware...")
 
         // use before mounting routes, otherwise req.body is undefined

@@ -1,4 +1,4 @@
-import type { Application } from 'express'
+import type { Application as WSApplication } from 'express-ws'
 
 import Log from '../middlewares/Log'
 import apiRouter from './../routes/Api'
@@ -6,7 +6,7 @@ import Locals from './Locals'
 import Mpd from './Mpd'
 
 class Routes {
-    public mountApi(_express: Application): Application {
+    public mountApi(_express: WSApplication): WSApplication {
         const apiPrefix = Locals.config().apiPrefix
         const webApiPrefix = Locals.config().webApiPrefix
         Log.info('Routes :: Mounting API Routes...')
@@ -14,7 +14,7 @@ class Routes {
         return _express.use(`/${apiPrefix}/${webApiPrefix}`, apiRouter)
     }
 
-    public mountNativeApi(_express: Application): Application {
+    public mountNativeApi(_express: WSApplication): WSApplication {
         const apiPrefix = Locals.config().apiPrefix
         const nativeApiPrefix = Locals.config().nativeApiPrefix
         Log.info('Routes :: Mounting Native API Routes...')

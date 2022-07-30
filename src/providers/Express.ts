@@ -1,15 +1,16 @@
-import type { Application } from 'express'
+import type { Application as WSApplication } from 'express-ws'
 
 import express from 'express'
 import Locals from './Locals'
 import Routes from './Routes'
 import Bootstrap from '../middlewares/Kernel'
 import ExceptionHandler from '../exception/Handler'
+import WebSocket from './WebSocket'
 
 class Express {
-    public express: Application
+    public express: WSApplication
     constructor() {
-        this.express = express()
+        this.express = express() as unknown as WSApplication
 
         this.mountDotEnv()
         this.mountMiddlewares()
@@ -32,15 +33,23 @@ class Express {
         this.express = ExceptionHandler.notFoundHandler(this.express) // it must register after all routes are mounted
     }
 
-    public mountNativeRoutes(): void {
-        this.express = Routes.mountNativeApi(this.express)
-
+    public mountErrorHandler(): void {
         this.express.use(ExceptionHandler.logErrors)
         this.express.use(ExceptionHandler.clientErrorHandler)
     }
 
+    public mountNativeRoutes(): void {
+        this.express = Routes.mountNativeApi(this.express)
+    }
+
+    public mountWebSocket(): void {
+        this.express = WebSocket.enableWebSocket(this.express)
+    }
+
     public init(): any {
         const port: number = Locals.config().port
+
+        this.mountWebSocket()
 
         this.express
             .listen(port, () => {

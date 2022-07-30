@@ -1,4 +1,4 @@
-import type { Application } from 'express'
+import type { Application as WSApplication } from 'express-ws'
 
 import { resolve } from 'node:path'
 import * as dotenv from 'dotenv'
@@ -36,7 +36,7 @@ class Locals {
         }
     }
 
-    public static init(_express: Application): Application {
+    public static init(_express: WSApplication): WSApplication {
         _express.locals.app = this.config()
         return _express
     }

@@ -6,6 +6,7 @@ import Log from '../middlewares/Log'
 import { Router } from 'express'
 import NativeController from '../controllers/Api/Native'
 import { ValueType } from '../types'
+import WS from '../middlewares/WS'
 
 export type IMpdNativeRoute = ValueType<{
     [t in keyof MPDApi.APIS]: [t, keyof MPDApi.APIS[t]]
@@ -70,8 +71,18 @@ class Mpd {
         return router
     }
 
+    public async listen() {
+        if (WS.sendMessage) {
+            this.client?.on('system-player', async () => {
+                const status = await this.client?.api.status.get()
+                WS.sendMessage!('mpd')('status', status)
+            })
+        }
+    }
+
     public async init() {
         await this.connect()
+        this.listen()
     }
 }
 
