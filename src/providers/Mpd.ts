@@ -60,7 +60,11 @@ class Mpd {
 
         names.forEach(([ns, name]) => {
             const route = `/${ns}/${name}`
-            router.post(route, NativeController.perform)
+            router.post(
+                route,
+                NativeController.validate(),
+                NativeController.perform
+            )
         })
 
         return router

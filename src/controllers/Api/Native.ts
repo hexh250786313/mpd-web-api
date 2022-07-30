@@ -1,7 +1,9 @@
 import type { NextFunction, Request, Response } from 'express'
 import type { IMpdNativeRoute } from '../../providers/Mpd'
 
+import { body } from 'express-validator'
 import Mpd from '../../providers/Mpd'
+import { validated } from '../../utils'
 
 class NativeController {
     public static perform(
@@ -9,23 +11,43 @@ class NativeController {
         res: Response,
         next: NextFunction
     ): any {
-        const [ns, name] = req.route.path
-            .replace(/(^\/|\/$)/g, '')
-            .split('/') as IMpdNativeRoute
+        validated({ req, res, next }, () => {
+            const [ns, name] = req.route.path
+                .replace(/(^\/|\/$)/g, '')
+                .split('/') as IMpdNativeRoute
 
-        const args = Array.isArray(req?.body?.fnArgs) ? req.body.fnArgs : []
-        const fn = (Mpd.client!.api[ns] as any)[name]
-        fn(...args)
-            .then((result: any) => {
-                res.json({
-                    code: 200,
-                    message: 'OK',
-                    data: result,
+            const args = req?.body?.commandArgs ?? []
+
+            const fn = (Mpd.client!.api[ns] as any)[name]
+            fn(...args)
+                .then((result: any) => {
+                    res.json({
+                        code: 200,
+                        message: 'OK',
+                        data: result,
+                    })
                 })
-            })
-            .catch((e: any) => {
-                next(new Error(e))
-            })
+                .catch((e: any) => {
+                    next(new Error(e))
+                })
+        })
+    }
+
+    public static validate() {
+        return [
+            body('commandArgs')
+                .isArray()
+                .optional()
+                .withMessage('body must be an array'),
+            body('commandArgs.*')
+                .custom((value) =>
+                    ['string', 'number', 'boolean'].includes(typeof value)
+                )
+                .optional()
+                .withMessage(
+                    "body's elements' type must be one of [string, number, boolean]"
+                ),
+        ]
     }
 }
 

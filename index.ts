@@ -5,8 +5,8 @@ const mock = function (url: string) {
         throw new Error('Url required!')
     }
 
-    const _fetch = async (args?: any) => {
-        const rawBody = { fnArgs: args ?? [] }
+    const _fetch = async (commandArgs?: any) => {
+        const rawBody = { commandArgs }
         const opts: FetchOptions = {
             method: 'post',
             headers: {
@@ -16,8 +16,10 @@ const mock = function (url: string) {
             credentials: 'include',
             mode: 'cors',
             cache: 'no-cache',
-            body: JSON.stringify(rawBody),
+            body: rawBody,
         }
+
+        console.log(opts)
 
         return fetch(url, opts).then((res) => {
             console.log(res)
@@ -29,7 +31,8 @@ const mock = function (url: string) {
 }
 
 /** 专辑列表 */
-// mock("http://127.0.0.1:8080/db/about")(["album"]);
+// mock('http://127.0.0.1:8080/db/about')(['album'])
+mock('http://127.0.0.1:8080/mpd/native/db/list')()
 
 /** 点击进某个专辑, 查看歌曲 title 和作者 artist */
 // mock("http://127.0.0.1:8080/db/list")([
