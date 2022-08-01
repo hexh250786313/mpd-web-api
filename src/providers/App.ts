@@ -30,8 +30,10 @@ class App {
     }
 
     public loadServerErrorHandler(): void {
-        Express.mountNotFoundHandler()
-        Express.mountErrorHandler()
+        // @FIXME:
+        // Express.mountNotFoundHandler()
+        // Express.mountNoMpdConnectionHandler()
+        // Express.mountErrorHandler()
     }
 }
 

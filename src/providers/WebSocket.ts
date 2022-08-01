@@ -19,7 +19,7 @@ class WebSocket {
                 console.log(msg)
             })
             ws.on('close', () => {
-                // TODO:
+                // @TODO:
             })
         })
 

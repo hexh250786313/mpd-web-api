@@ -14,6 +14,8 @@ class Express {
 
         this.mountDotEnv()
         this.mountMiddlewares()
+        // @FIXME:
+        this.mountNoMpdConnectionHandler()
         this.mountRoutes()
     }
 
@@ -31,6 +33,10 @@ class Express {
 
     public mountNotFoundHandler(): void {
         this.express = ExceptionHandler.notFoundHandler(this.express) // it must register after all routes are mounted
+    }
+
+    public mountNoMpdConnectionHandler(): void {
+        this.express = ExceptionHandler.noMpdConnectionHandler(this.express)
     }
 
     public mountErrorHandler(): void {

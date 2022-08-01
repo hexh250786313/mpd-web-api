@@ -58,7 +58,7 @@ class Mpd {
         return new Promise((resolve) => {
             console.log(
                 '\x1b[33m%s\x1b[0m',
-                'Connecting to MPD. Port: ' + that.port
+                'MPD :: Connecting to MPD. Port: ' + that.port
             )
             ;(function attempt() {
                 // if (count === 30) {
@@ -79,10 +79,11 @@ class Mpd {
                                 resolve(null)
                             })
                             .catch((e) => {
-                                count++
-                                Log.error(
+                                const str =
                                     'Mpd :: ' + e + '. Retrying in 1 second'
-                                )
+                                count++
+                                    ? console.log('\x1b[31m%s\x1b[0m', str)
+                                    : Log.error(str)
                                 attempt()
                             })
                     },
@@ -112,11 +113,18 @@ class Mpd {
         if (WS.sendMessage) {
             this.client?.on('system-player', async () => {
                 const status = await this.client?.api.status.get()
-                WS.sendMessage!('mpd')('status', status)
+                WS.sendMessage!('mpd')('player', status)
             })
         }
         this.client?.on('close', async () => {
-            this.connect()
+            this.client = null
+            WS.sendMessage!('mpd')('close', {
+                disconnected: true,
+                port: this.port,
+                host: this.host,
+            })
+            await this.connect()
+            this.listen()
         })
     }
 

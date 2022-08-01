@@ -21,10 +21,10 @@ class CORS {
         // })
 
         const options = {
-            origin: (a, callback) => {
-                callback(null, a)
-            },
-            credentials: true,
+            // origin: (a, callback) => {
+            // callback(null, a)
+            // },
+            // credentials: true,
             optionsSuccessStatus: 200, // default: 204 No content
         } as CorsOptions
 

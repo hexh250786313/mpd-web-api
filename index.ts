@@ -17,13 +17,15 @@ const mock = function (url: string) {
             mode: 'cors',
             cache: 'no-cache',
             body: rawBody,
-        }
-
-        console.log(opts)
+            async onResponse({ request, response }) {
+                // Log response
+                console.log('[fetch response]', response)
+            },
+        } as FetchOptions
 
         return fetch(url, opts).then((res) => {
             console.log(res)
-            console.log(res.data.directory[0])
+            // console.log(res.data.directory[0])
         })
     }
 
@@ -31,8 +33,8 @@ const mock = function (url: string) {
 }
 
 /** 专辑列表 */
-// mock('http://127.0.0.1:8080/db/about')(['album'])
-mock('http://127.0.0.1:8080/mpd/native/db/list')()
+mock('http://127.0.0.1:8080/mpd/web/album')(['album'])
+// mock('http://127.0.0.1:8080/mpd/native/db/list')()
 
 /** 点击进某个专辑, 查看歌曲 title 和作者 artist */
 // mock("http://127.0.0.1:8080/db/list")([
