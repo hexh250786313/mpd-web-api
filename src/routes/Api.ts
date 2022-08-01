@@ -1,9 +1,11 @@
 import { Router } from 'express'
+import { UrlController } from '../controllers/Api/Client'
 import { AlbumController, PlayingController } from '../controllers/Api/Web'
 
 const router = Router()
 
-router.post(`/album`, AlbumController.perform)
-router.post(`/playing/play`, PlayingController.perform)
+router.post(`/web/album`, AlbumController.perform)
+router.post(`/client/url`, UrlController.perform)
+router.post(`/web/playing/play`, PlayingController.perform)
 
 export default router

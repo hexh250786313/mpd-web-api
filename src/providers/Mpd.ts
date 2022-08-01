@@ -29,9 +29,10 @@ class Mpd {
         this.host =
             params?.host ??
             Locals.config().mpdUrl.replace(/(^https?:\/\/|:\d*$)/g, '')
-        this.port =
-            params?.port ??
-            parseInt(Locals.config().mpdUrl.replace(/(^.*:)/g, ''))
+        // @fixme:
+        this.port = 8899
+        // params?.port ??
+        // parseInt(Locals.config().mpdUrl.replace(/(^.*:)/g, ''))
     }
 
     private getNames<T extends keyof MPDApi.APIS>(): IMpdNativeRoute[] {

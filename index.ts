@@ -11,11 +11,11 @@ const mock = function (url: string) {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json',
-                Accept: 'application/json, text/plain, */*',
+                Accept: 'application/json',
             },
-            credentials: 'include',
-            mode: 'cors',
-            cache: 'no-cache',
+            // credentials: 'include',
+            // mode: 'cors',
+            // cache: 'no-cache',
             body: rawBody,
             async onResponse({ request, response }) {
                 // Log response
@@ -33,7 +33,8 @@ const mock = function (url: string) {
 }
 
 /** 专辑列表 */
-mock('http://127.0.0.1:8080/mpd/web/album')(['album'])
+// mock('http://127.0.0.1:8080/mpd/web/album')()
+mock('http://127.0.0.1:8080/mpd/client/url')()
 // mock('http://127.0.0.1:8080/mpd/native/db/list')()
 
 /** 点击进某个专辑, 查看歌曲 title 和作者 artist */

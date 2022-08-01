@@ -17,9 +17,10 @@ async function main() {
     try {
         App.loadConfiguration()
         App.loadServer()
-        // @FIXME:
+        // @fixme:
+        // App.loadServerErrorHandler()
         App.loadMpdClient().then(() => {
-            App.loadServerErrorHandler()
+            //
         })
     } catch (error) {
         console.error(error)

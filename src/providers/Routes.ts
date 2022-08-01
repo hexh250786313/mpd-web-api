@@ -8,10 +8,9 @@ import Mpd from './Mpd'
 class Routes {
     public mountApi(_express: WSApplication): WSApplication {
         const apiPrefix = Locals.config().apiPrefix
-        const webApiPrefix = Locals.config().webApiPrefix
         Log.info('Routes :: Mounting API Routes...')
 
-        return _express.use(`/${apiPrefix}/${webApiPrefix}`, apiRouter)
+        return _express.use(`/${apiPrefix}`, apiRouter)
     }
 
     public mountNativeApi(_express: WSApplication): WSApplication {
