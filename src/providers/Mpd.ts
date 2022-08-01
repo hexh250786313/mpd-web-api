@@ -17,6 +17,14 @@ class Mpd {
     host: string
     port: number
 
+    public setHost(_host: string) {
+        this.host = _host
+    }
+
+    public setPort(_port: number) {
+        this.port = _port
+    }
+
     constructor(params?: { host: string; port: number }) {
         this.host =
             params?.host ??
@@ -44,15 +52,44 @@ class Mpd {
     }
 
     private async connect() {
-        try {
-            this.client = await mpdApi.connect({
-                host: this.host,
-                port: this.port,
-            })
-            Log.info('Mpd :: Connected')
-        } catch (e) {
-            Log.error('Mpd :: ' + e)
-        }
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        const that = this
+        let count = 0
+        return new Promise((resolve) => {
+            console.log(
+                '\x1b[33m%s\x1b[0m',
+                'Connecting to MPD. Port: ' + that.port
+            )
+            ;(function attempt() {
+                // if (count === 30) {
+                // resolve(null)
+                // }
+                setTimeout(
+                    () => {
+                        mpdApi
+                            .connect({
+                                host: that.host,
+                                port: that.port,
+                            })
+                            .then((client) => {
+                                const str = 'Mpd :: Connected'
+                                that.client = client
+                                console.log('\x1b[33m%s\x1b[0m', str)
+                                Log.info(str)
+                                resolve(null)
+                            })
+                            .catch((e) => {
+                                count++
+                                Log.error(
+                                    'Mpd :: ' + e + '. Retrying in 1 second'
+                                )
+                                attempt()
+                            })
+                    },
+                    count ? 1000 : 0
+                )
+            })()
+        })
     }
 
     public getNativeRouter() {
@@ -78,6 +115,9 @@ class Mpd {
                 WS.sendMessage!('mpd')('status', status)
             })
         }
+        this.client?.on('close', async () => {
+            this.connect()
+        })
     }
 
     public async init() {
