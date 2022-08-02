@@ -8,11 +8,11 @@ import NativeController from '../controllers/Api/Native'
 import { ValueType } from '../types'
 import WS from '../middlewares/WS'
 
-export type IMpdNativeRoute = ValueType<{
+export type IMPDNativeRoute = ValueType<{
     [t in keyof MPDApi.APIS]: [t, keyof MPDApi.APIS[t]]
 }>
 
-class Mpd {
+class MPD {
     public client: MPDApi.ClientAPI | null = null
     host: string
     port: number
@@ -35,7 +35,7 @@ class Mpd {
         // parseInt(Locals.config().mpdUrl.replace(/(^.*:)/g, ''))
     }
 
-    private getNames<T extends keyof MPDApi.APIS>(): IMpdNativeRoute[] {
+    private getNames<T extends keyof MPDApi.APIS>(): IMPDNativeRoute[] {
         if (this.client) {
             const names = (Object.keys(this.client!.api) as Array<T>).flatMap(
                 (ns) => {
@@ -43,7 +43,7 @@ class Mpd {
                         Object.keys(this.client!.api[ns]) as Array<
                             keyof MPDApi.APIS[T]
                         >
-                    ).map((name) => [ns, name] as IMpdNativeRoute)
+                    ).map((name) => [ns, name] as IMPDNativeRoute)
                 }
             )
 
@@ -73,7 +73,7 @@ class Mpd {
                                 port: that.port,
                             })
                             .then((client) => {
-                                const str = 'Mpd :: Connected'
+                                const str = 'MPD :: Connected'
                                 that.client = client
                                 console.log('\x1b[33m%s\x1b[0m', str)
                                 Log.info(str)
@@ -81,7 +81,7 @@ class Mpd {
                             })
                             .catch((e) => {
                                 const str =
-                                    'Mpd :: ' + e + '. Retrying in 1 second'
+                                    'MPD :: ' + e + '. Retrying in 1 second'
                                 count++
                                     ? console.log('\x1b[31m%s\x1b[0m', str)
                                     : Log.error(str)
@@ -135,4 +135,4 @@ class Mpd {
     }
 }
 
-export default new Mpd()
+export default new MPD()

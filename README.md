@@ -1,6 +1,6 @@
 # mpd-web-api
 
-It exposes REST API for web-based mpd client.
+It exposes REST API for web-based MPD client.
 
 Most codes are from [andersevenrud/mycardashpoc](https://github.com/andersevenrud/mycardashpoc/tree/main/packages/api)
 
@@ -111,7 +111,7 @@ Use below message to fire `status` event.
 wsConn.send(JSON.stringify({ channel: 'mpd', packet: 'report' }))
 ```
 
-It sends current mpd status data every 1 second.
+It sends current MPD status data every 1 second.
 
 And use `deport` to stop sending.
 
@@ -125,7 +125,7 @@ You can get message like this:
 const message = {
   channel: 'mpd',
   packet: 'status',
-  data: MpdStatusObj,
+  data: MPDStatusObj,
 }
 ```
 

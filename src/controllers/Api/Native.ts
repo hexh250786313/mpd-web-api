@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from 'express'
-import type { IMpdNativeRoute } from '../../providers/Mpd'
+import type { IMPDNativeRoute } from '../../providers/MPD'
 
 import { body } from 'express-validator'
-import Mpd from '../../providers/Mpd'
+import MPD from '../../providers/MPD'
 import { validated } from '../../utils'
 
 class NativeController {
@@ -14,11 +14,11 @@ class NativeController {
         validated({ req, res, next }, () => {
             const [ns, name] = req.route.path
                 .replace(/(^\/|\/$)/g, '')
-                .split('/') as IMpdNativeRoute
+                .split('/') as IMPDNativeRoute
 
             const args = req?.body?.commandArgs ?? []
 
-            const fn = (Mpd.client!.api[ns] as any)[name]
+            const fn = (MPD.client!.api[ns] as any)[name]
             fn(...args)
                 .then((result: any) => {
                     res.json({

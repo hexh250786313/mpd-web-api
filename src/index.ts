@@ -19,7 +19,7 @@ async function main() {
         App.loadServer()
         // @fixme:
         // App.loadServerErrorHandler()
-        App.loadMpdClient().then(() => {
+        App.loadMPDClient().then(() => {
             //
         })
     } catch (error) {

@@ -16,7 +16,7 @@ class Express {
         this.mountMiddlewares()
         // @fixme:
         this.mountErrorHandlers()
-        // this.mountNoMpdConnectionHandler()
+        // this.mountNoMPDConnectionHandler()
         this.mountRoutes()
     }
 
@@ -32,12 +32,12 @@ class Express {
         this.express = Routes.mountApi(this.express)
     }
 
-    public mountNoMpdConnectionHandler(): void {
-        this.express = ExceptionHandler.noMpdConnectionHandler(this.express)
+    public mountNoMPDConnectionHandler(): void {
+        this.express = ExceptionHandler.noMPDConnectionHandler(this.express)
     }
 
     public mountErrorHandlers(): void {
-        this.express = ExceptionHandler.noMpdConnectionHandler(this.express)
+        this.express = ExceptionHandler.noMPDConnectionHandler(this.express)
     }
 
     public mountErrorHandler(): void {

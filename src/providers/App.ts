@@ -3,7 +3,7 @@ import Log from '../middlewares/Log'
 import * as dotenv from 'dotenv'
 import Express from './Express'
 import { existsSync } from 'node:fs'
-import Mpd from './Mpd'
+import MPD from './MPD'
 
 class App {
     public loadConfiguration(): void {
@@ -22,16 +22,16 @@ class App {
         Express.init()
     }
 
-    public async loadMpdClient(): Promise<void> {
-        Log.info('Mpd :: Connecting ...')
+    public async loadMPDClient(): Promise<void> {
+        Log.info('MPD :: Connecting ...')
 
-        await Mpd.init()
+        await MPD.init()
         Express.mountNativeRoutes()
     }
 
     public loadServerErrorHandler(): void {
         // @fixme:
-        // Express.mountNoMpdConnectionHandler()
+        // Express.mountNoMPDConnectionHandler()
         // Express.mountErrorHandler()
     }
 }

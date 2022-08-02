@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express'
 import Locals from '../../../providers/Locals'
-import Mpd from '../../../providers/Mpd'
+import MPD from '../../../providers/MPD'
 
 export class UrlController {
     public static perform(
@@ -13,16 +13,22 @@ export class UrlController {
         const serverUrl = Locals.config().url
         console.log({ serverUrl, port })
         if (serverUrl !== `${host}:${port}`) {
-            Mpd.setPort(port)
+            MPD.setPort(port)
+            res.status(200).json({
+                code: 200,
+                message: `MPD client is now listening on port ${port}`,
+                data: null,
+            })
+        } else {
+            res.status(500).json({
+                code: 500,
+                message: 'Failed to connect to MPD',
+                data: {
+                    disconnected: true,
+                    host: MPD.host,
+                    port: MPD.port,
+                },
+            })
         }
-        res.status(500).json({
-            code: 500,
-            message: 'Failed to connect to MPD',
-            data: {
-                disconnected: true,
-                host: Mpd.host,
-                port: Mpd.port,
-            },
-        })
     }
 }

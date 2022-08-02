@@ -3,7 +3,7 @@ import type { Application as WSApplication } from 'express-ws'
 
 import Log from '../middlewares/Log'
 import Locals from '../providers/Locals'
-import Mpd from '../providers/Mpd'
+import MPD from '../providers/MPD'
 
 class Handler {
     public static clientErrorHandler(
@@ -67,14 +67,14 @@ class Handler {
         return next(err)
     }
 
-    public static noMpdConnectionHandler(_express: WSApplication): any {
+    public static noMPDConnectionHandler(_express: WSApplication): any {
         console.log('mount')
         _express.use(
             /^(?!(\/mpd\/client\/url$)).*/,
             (req: Request, res: Response, next: NextFunction) => {
                 console.log('jj')
-                if (!Mpd.client) {
-                    const message = 'Failed: Mpd client is not connected!'
+                if (!MPD.client) {
+                    const message = 'Failed: MPD client is not connected!'
                     const ip =
                         req.headers['x-forwarded-for'] ||
                         req.socket.remoteAddress
@@ -84,8 +84,8 @@ class Handler {
                         message,
                         data: {
                             disconnected: true,
-                            port: Mpd.port,
-                            host: Mpd.host,
+                            port: MPD.port,
+                            host: MPD.host,
                         },
                     })
                 }

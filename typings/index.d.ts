@@ -7,22 +7,22 @@ export type WebSocketPacketData = any
 
 export type ShutdownFunction = () => Promise<void>
 
-export type MpdSubscriber = (data: any) => void
+export type MPDSubscriber = (data: any) => void
 
-export type MpdUnsubscriber = () => void
+export type MPDUnsubscriber = () => void
 
-export type MpdPublisher = (pkg: string, data?: any) => void
+export type MPDPublisher = (pkg: string, data?: any) => void
 
-export interface MpdContext {
+export interface MPDContext {
     app: Application
     router: Router
-    subscribe: (fn: MpdSubscriber) => MpdUnsubscriber
-    send: MpdPublisher
+    subscribe: (fn: MPDSubscriber) => MPDUnsubscriber
+    send: MPDPublisher
     config: Configuration
 }
 
-export interface Mpd {
-    register: (ctx: MpdContext) => Promise<ShutdownFunction>
+export interface MPD {
+    register: (ctx: MPDContext) => Promise<ShutdownFunction>
 }
 
 export type AnyClient = any

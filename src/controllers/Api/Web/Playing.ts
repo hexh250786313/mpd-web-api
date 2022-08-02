@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express'
 import { body } from 'express-validator'
-import Mpd from '../../../providers/Mpd'
+import MPD from '../../../providers/MPD'
 
 export class PlayingController {
     public static perform(
@@ -8,10 +8,10 @@ export class PlayingController {
         res: Response,
         next: NextFunction
     ): any {
-        const search = Mpd.client!.api.queue.search
-        const deleteId = Mpd.client!.api.queue.deleteid
-        const searchAdd = Mpd.client!.api.db.searchadd
-        const playNext = Mpd.client!.api.playback.next
+        const search = MPD.client!.api.queue.search
+        const deleteId = MPD.client!.api.queue.deleteid
+        const searchAdd = MPD.client!.api.db.searchadd
+        const playNext = MPD.client!.api.playback.next
 
         const args = Array.isArray(req?.body?.fnArgs) ? req.body.fnArgs : []
 
