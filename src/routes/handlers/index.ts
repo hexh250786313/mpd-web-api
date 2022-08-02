@@ -1,1 +1,0 @@
-export { commonHandler } from './common'
