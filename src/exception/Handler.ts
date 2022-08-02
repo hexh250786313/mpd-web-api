@@ -72,6 +72,7 @@ class Handler {
         _express.use(
             /^(?!(\/mpd\/client\/url$)).*/,
             (req: Request, res: Response, next: NextFunction) => {
+                console.log('jj')
                 if (!Mpd.client) {
                     const message = 'Failed: Mpd client is not connected!'
                     const ip =

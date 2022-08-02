@@ -13,11 +13,7 @@ export class UrlController {
         const serverUrl = Locals.config().url
         console.log({ serverUrl, port })
         if (serverUrl !== `${host}:${port}`) {
-            console.log('------------')
             Mpd.setPort(port)
-            // console.log('Url go')
-            // console.log(req.body)
-            // console.log(req.get('Content-Type'))
         }
         res.status(500).json({
             code: 500,
