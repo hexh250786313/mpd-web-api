@@ -28,7 +28,11 @@ class NativeController {
                     })
                 })
                 .catch((e: any) => {
-                    next(new Error(e))
+                    res.status(400).json({
+                        code: 400,
+                        message: e.message,
+                        data: null,
+                    })
                 })
         })
     }

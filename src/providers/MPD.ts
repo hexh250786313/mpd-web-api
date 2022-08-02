@@ -7,6 +7,7 @@ import { Router } from 'express'
 import NativeController from '../controllers/Api/Native'
 import { ValueType } from '../types'
 import WS from '../middlewares/WS'
+import { extractHostAndPort } from '../utils/extract-host-and-port'
 
 export type IMPDNativeRoute = ValueType<{
     [t in keyof MPDApi.APIS]: [t, keyof MPDApi.APIS[t]]
@@ -25,14 +26,11 @@ class MPD {
         this.port = _port
     }
 
-    constructor(params?: { host: string; port: number }) {
-        this.host =
-            params?.host ??
-            Locals.config().mpdUrl.replace(/(^https?:\/\/|:\d*$)/g, '')
-        // @fixme:
-        this.port = 8899
-        // params?.port ??
-        // parseInt(Locals.config().mpdUrl.replace(/(^.*:)/g, ''))
+    constructor() {
+        const mpdUrl = Locals.config().mpdUrl
+        const { host, port } = extractHostAndPort(mpdUrl)
+        this.host = host
+        this.port = port!
     }
 
     private getNames<T extends keyof MPDApi.APIS>(): IMPDNativeRoute[] {
@@ -56,6 +54,7 @@ class MPD {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const that = this
         let count = 0
+        const timeout = 1
         return new Promise((resolve) => {
             console.log(
                 '\x1b[33m%s\x1b[0m',
@@ -71,6 +70,7 @@ class MPD {
                             .connect({
                                 host: that.host,
                                 port: that.port,
+                                timeout: timeout * 1000,
                             })
                             .then((client) => {
                                 const str = 'MPD :: Connected'
@@ -81,7 +81,9 @@ class MPD {
                             })
                             .catch((e) => {
                                 const str =
-                                    'MPD :: ' + e + '. Retrying in 1 second'
+                                    'MPD :: ' +
+                                    e +
+                                    `. Retrying in ${timeout} second`
                                 count++
                                     ? console.log('\x1b[31m%s\x1b[0m', str)
                                     : Log.error(str)

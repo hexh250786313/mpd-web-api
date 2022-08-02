@@ -14,9 +14,7 @@ class Express {
 
         this.mountDotEnv()
         this.mountMiddlewares()
-        // @fixme:
         this.mountErrorHandlers()
-        // this.mountNoMPDConnectionHandler()
         this.mountRoutes()
     }
 
@@ -32,15 +30,8 @@ class Express {
         this.express = Routes.mountApi(this.express)
     }
 
-    public mountNoMPDConnectionHandler(): void {
-        this.express = ExceptionHandler.noMPDConnectionHandler(this.express)
-    }
-
     public mountErrorHandlers(): void {
         this.express = ExceptionHandler.noMPDConnectionHandler(this.express)
-    }
-
-    public mountErrorHandler(): void {
         this.express.use(ExceptionHandler.logErrors)
         this.express.use(ExceptionHandler.clientErrorHandler)
     }

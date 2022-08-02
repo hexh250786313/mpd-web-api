@@ -8,22 +8,18 @@ import MPD from '../providers/MPD'
 class Handler {
     public static clientErrorHandler(
         err: any,
-        req: Request,
+        _req: Request,
         res: Response,
         next: NextFunction
     ): any {
         Log.error(err.stack)
 
         console.log('client error')
-        if (req.xhr) {
-            return res.status(500).json({ error: err.stack })
-        } else {
-            res.json({
-                code: err.status || 500,
-                message: 'Failed: ' + err,
-            })
-            return next(err)
-        }
+        res.json({
+            code: err.status || 500,
+            message: 'Failed: ' + err,
+        })
+        return next(err)
     }
 
     public static errorHandler(
@@ -72,7 +68,6 @@ class Handler {
         _express.use(
             /^(?!(\/mpd\/client\/url$)).*/,
             (req: Request, res: Response, next: NextFunction) => {
-                console.log('jj')
                 if (!MPD.client) {
                     const message = 'Failed: MPD client is not connected!'
                     const ip =
