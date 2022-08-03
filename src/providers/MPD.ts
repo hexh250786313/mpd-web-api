@@ -1,13 +1,15 @@
 import type { MPDApi } from 'mpd-api'
+import type { ValueType } from '../types'
 
 import Locals from './Locals'
 import mpdApi from 'mpd-api'
 import Log from '../middlewares/Log'
 import { Router } from 'express'
 import NativeController from '../controllers/Api/Native'
-import { ValueType } from '../types'
 import WS from '../middlewares/WS'
 import { extractHostAndPort } from '../utils/extract-host-and-port'
+import { formatSong, getStoredPlaylist, throttlePromise } from '../utils'
+import { isEqual } from 'lodash'
 
 export type IMPDNativeRoute = ValueType<{
     [t in keyof MPDApi.APIS]: [t, keyof MPDApi.APIS[t]]
@@ -113,10 +115,48 @@ class MPD {
     }
 
     public async listen() {
+        let cache: any
         if (WS.sendMessage) {
-            this.client?.on('system-player', async () => {
-                const status = await this.client?.api.status.get()
-                WS.sendMessage!('mpd')('player', status)
+            // Combining throttle and debounce, so that we can throttle the "player" / "mixer" changing and also run the last call
+            // note that throtte delay can not be too long cause it will make the debounce can not get the right last run
+            /**
+             * For the condition that mixer and player are changed at the same time ( play or pause, we just need "player" in this case )
+             * 50ms is enough to prevent the conflict
+             *  */
+            // const throttleIt = throttlePromise(50)
+            /** For invoking the last call */
+            // const doubleIt = debouncePromise(400)
+            this.client?.on('system', async (which) => {
+                let data: any = null
+                switch (which) {
+                    case 'playlist': {
+                        data = await this.client?.api.queue.info()
+                        if (data) {
+                            data = formatSong(data)
+                        }
+                        break
+                    }
+                    case 'stored_playlist': {
+                        data = await getStoredPlaylist()
+                        break
+                    }
+                    default: {
+                        // await throttleIt(async () => {
+                        // await doubleIt(async () => {
+                        data = await this.client?.api.status.get()
+                        if (data?.bitrate) {
+                            data.bitrate = undefined
+                        }
+                        // })
+                        // })
+                        break
+                    }
+                }
+                if (!isEqual(data, cache)) {
+                    console.log('----------------', which)
+                    WS.sendMessage!('mpd')(which, data)
+                    cache = data
+                }
             })
         }
         this.client?.on('close', async () => {

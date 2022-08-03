@@ -32,7 +32,7 @@ Method of every native API is `POST`
   - `commandArgs`: it means the arguments of mpd-api function. type: `undefined | Array<string | boolean | number>`
     ```json
     {
-      "commandArgs": ["date", "(artist contains 'Empire')", ["album"]] // then you get the result of mpd-api function: client.db.search("date", "(artist contains 'Empire')", ["album"])
+      "commandArgs": ["date", "(artist contains 'Empire')", ["album"]] // then you get the result of mpd-api function: client.db.list("date", "(artist contains 'Empire')", ["album"])
     }
     ```
 
@@ -43,7 +43,7 @@ Method of every native API is `POST`
   {
     "code": 200, // 400 if got error from mpd-api function
     "message": "OK", // error message if got error from mpd-api function
-    "data": [ // result from client.db.search("(artist contains 'Empire')")
+    "data": [ // result from client.db.list("date", "(artist contains 'Empire')", ["album"])
       {
         "file": "song.ape",
         "last_modified": "2017-01-04T17:39:57Z",

@@ -32,18 +32,6 @@ const mock = function (url: string) {
     return _fetch
 }
 
-/** 专辑列表 */
-// mock('http://127.0.0.1:8080/mpd/web/album')()
-mock('http://127.0.0.1:8080/mpd/client/url')()
-// mock('http://127.0.0.1:8080/mpd/native/db/list')()
-
-/** 点击进某个专辑, 查看歌曲 title 和作者 artist */
-// mock("http://127.0.0.1:8080/db/list")([
-// "artist",
-// '(album == "叶惠美")',
-// "title",
-// ]);
-
 /** 添加某个歌曲到播放列表并播放 */
 // mock("http://127.0.0.1:8080/queue/search")([
 // '((album == "叶惠美") AND (title == "懦夫"))',
@@ -74,12 +62,3 @@ mock('http://127.0.0.1:8080/mpd/client/url')()
 // mock("http://127.0.0.1:8080/db/lsinfo")([
 // "[2003] 叶惠美 - 01 - 以父之名 - 周杰伦.flac",
 // ]);
-
-/** 播放一个专辑 */
-// mock("http://127.0.0.1:8080/queue/clear")();
-// mock("http://127.0.0.1:8080/db/searchadd")([
-// '((album == "十二新作") AND (artist == "周杰伦"))',
-// "position",
-// "0",
-// ]);
-// mock("http://127.0.0.1:8080/playback/play")();

@@ -4,7 +4,7 @@ import MPD from '../../../providers/MPD'
 import { validated } from '../../../utils'
 import { extractHostAndPort } from '../../../utils/extract-host-and-port'
 
-export class UrlController {
+export class ConnectController {
     public static perform(
         req: Request,
         res: Response,

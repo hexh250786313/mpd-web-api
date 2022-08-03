@@ -30,7 +30,6 @@ class Handler {
             setTimeout(() => {
                 addErrorHandlers(_express, 'errorHandler', this.errorHandler)
                 addErrorHandlers(_express, 'logErrors', this.logErrors)
-                // console.log(_express._router.stack)
             }, 50)
         })
         return _express
@@ -63,7 +62,7 @@ class Handler {
 
     public static noMPDConnectionHandler(_express: WSApplication): any {
         _express.use(
-            /^(?!(\/mpd\/client\/url$)).*/,
+            /^(?!(\/mpd\/client\/connect$)).*/,
             (req: Request, res: Response, next: NextFunction) => {
                 if (!MPD.client) {
                     const message = 'Failed: MPD client is not connected!'
