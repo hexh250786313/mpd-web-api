@@ -1,1 +1,0 @@
-export { dbAboutHandler } from './about'

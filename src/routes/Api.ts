@@ -1,11 +1,25 @@
 import { Router } from 'express'
-import { UrlController } from '../controllers/Api/Client'
+import { ConnectController } from '../controllers/Api/Client'
 import { AlbumController, PlayingController } from '../controllers/Api/Web'
 
 const router = Router()
 
-router.post(`/web/album`, AlbumController.perform)
-router.post(`/client/url`, UrlController.validate(), UrlController.perform)
+router.post(
+    `/client/connect`,
+    ConnectController.validate(),
+    ConnectController.perform
+)
+router.post(`/web/album/get`, AlbumController.validate(), AlbumController.get)
+router.post(
+    `/web/album/play`,
+    AlbumController.validate(),
+    AlbumController.play({ append: false })
+)
+router.post(
+    `/web/album/append`,
+    AlbumController.validate(),
+    AlbumController.play({ append: true })
+)
 router.post(`/web/playing/play`, PlayingController.perform)
 
 export default router
