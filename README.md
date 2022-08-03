@@ -1,8 +1,8 @@
-# mpd-web-api
+[toc]
 
 It exposes REST API for web-based MPD client.
 
-Most codes are from [andersevenrud/mycardashpoc](https://github.com/andersevenrud/mycardashpoc/tree/main/packages/api)
+It was inspired by [mpd-api](https://github.com/cotko/mpd-api#api) and [andersevenrud/mycardashpoc](https://github.com/andersevenrud/mycardashpoc/tree/main/packages/api)
 
 ## Usage
 
@@ -14,56 +14,60 @@ yarn start # http://localhost:8080 or "PORT=8980 yarn start" to use port 8980
 
 ## Http API
 
-All http APIs are listed [below](#apis).
+### Native APIs
 
-### Request & Response
+The "native" means that they are implemented for [mpd-api](https://github.com/cotko/mpd-api#api)
 
-#### Request
+Every native API is prefixed with `/mpd/native/` and corresponds to one of mpd-api function, see this: https://github.com/cotko/mpd-api#api
+
+Native APIs are listed [below](#native-apis-list).
+
+Method of every native API is `POST`
+
+#### Request Example
 
 - Method: **POST**
-- URL: `/db/search`
+- URL: `/mpd/native/db/list`
 - Body:
-  - `fnArgs`: it means the arguments of mpd-api function
-    ```
+  - `commandArgs`: it means the arguments of mpd-api function. type: `undefined | Array<string | boolean | number>`
+    ```json
     {
-      fnArgs: ["(artist contains 'Empire')"]
+      "commandArgs": ["date", "(artist contains 'Empire')", ["album"]] // then you get the result of mpd-api function: client.db.search("date", "(artist contains 'Empire')", ["album"])
     }
     ```
 
-#### Response
+#### Response Example
 
 - Body
-  ```
+  ```json
   {
-    "code": 200,
-    "message": "OK",
-    "data": [
+    "code": 200, // 400 if got error from mpd-api function
+    "message": "OK", // error message if got error from mpd-api function
+    "data": [ // result from client.db.search("(artist contains 'Empire')")
       {
-        file: 'sone.ape',
-        last_modified: '2017-01-04T17:39:57Z',
-        format: {
-          sample_rate: 44100,
-          bits: 16,
-          channels: 2,
-          original_value: '44100:16:2'
+        "file": "song.ape",
+        "last_modified": "2017-01-04T17:39:57Z",
+        "format": {
+          "sample_rate": 44100,
+          "bits": 16,
+          "channels": 2,
+          "original_value": "44100:16:2"
         },
-        artist: 'Empire',
-        album: 'album',
-        title: 'title',
-        track: 5,
-        genre: 'Pop',
-        time: 290,
-        duration: 289.96
+        "artist": "Empire",
+        "album": "album",
+        "title": "title",
+        "track": 5,
+        "genre": "Pop",
+        "time": 290,
+        "duration": 289.96
       }
     ]
   }
   ```
 
-### API calls example
+#### API calls example
 
-Every API corresponds to one of mpd-api function, see this: https://github.com/cotko/mpd-api#api
-
-1. Find the corresponding function in [mpd-api](https://github.com/cotko/mpd-api#api), for example `/db/search`, the corresponding function is `db.search`
+1. Find the corresponding function in [mpd-api](https://github.com/cotko/mpd-api#api), for example `db.search`, the corresponding API is `/mpd/native/db/search`
 2. Pass parameters. `db.search` accepts a string parameter, for example `db.search('(artist contains "Empire")')`, the API request would be:
 
    ```javascript
@@ -74,8 +78,8 @@ Every API corresponds to one of mpd-api function, see this: https://github.com/c
        throw new Error('Url required!')
      }
 
-     const _fetch = async (fnArgs) => {
-       const rawBody = { fnArgs }
+     const _fetch = async (commandArgs) => {
+       const rawBody = { commandArgs }
        const opts = {
          method: 'post',
          headers: {
@@ -85,7 +89,7 @@ Every API corresponds to one of mpd-api function, see this: https://github.com/c
          credentials: 'include',
          mode: 'cors',
          cache: 'no-cache',
-         body: JSON.stringify(rawBody),
+         body: JSON.parse(JSON.stringify(rawBody)),
        }
 
        return $fetch(url, opts).then((res) => {
@@ -96,158 +100,188 @@ Every API corresponds to one of mpd-api function, see this: https://github.com/c
      return _fetch
    }
 
-   mock('http://127.0.0.1:8080/db/search')(['(artist contains "Empire")'])
+   mock('http://127.0.0.1:8080/mpd/native/db/search')(['(artist contains "Empire")'])
    ```
+
+### Web APIs
+
+TODO
+
+### Client APIs
+
+Only one api: `/mpd/client/connect`, it is used to change the `host` / `port` / `password` of a MPD client connection and it will not do anything if the connection is already established
+
+#### Request Example
+
+- Method: **POST**
+- URL: `/mpd/client/connect`
+- Body:
+  - `url`: type: `string`
+  - `password`: type: `string`
+    ```json
+    {
+      "url": "http://localhost:6600", // or "localhost:6600"
+      "password": "123456"
+    }
+    ```
+
+#### Response Example
+
+- Body
+  ```json
+  {
+    "code": 200, // 400 if MPD client has been connected
+    "message": "MPD client is now listening on 'localhost:6600'",
+    "data": null // { host: 'localhost', port: 6600, disconnected: false } if MPD client has been connected
+  }
+  ```
+
 
 ## WebSocket
 
-Connect to websocket server: `ws://localhost:8080/status`
+Connect to websocket server: `ws://localhost:8080/`
 
-### status
+### Send Message
 
-Use below message to fire `status` event.
+TODO
 
-```typescript
-wsConn.send(JSON.stringify({ channel: 'mpd', packet: 'report' }))
-```
+## APIs List
 
-It sends current MPD status data every 1 second.
+### Native APIs List
 
-And use `deport` to stop sending.
+All `POST`
 
-```typescript
-wsConn.send(JSON.stringify({ channel: 'mpd', packet: 'deport' }))
-```
-
-You can get message like this:
-
-```typescript
-const message = {
-  channel: 'mpd',
-  packet: 'status',
-  data: MPDStatusObj,
-}
-```
-
-## APIs
-
-| POST API                                |
+| Native API                                |
 | --------------------------------------- |
-| /c2c/list                               |
-| /c2c/subscribe                          |
-| /c2c/unsubscribe                        |
-| /c2c/sendMessage                        |
-| /c2c/readMessages                       |
-| /connection/close                       |
-| /connection/kill                        |
-| /connection/ping                        |
-| /connection/getTagTypes                 |
-| /connection/enableTagTypes              |
-| /connection/disableTagTypes             |
-| /connection/clearTagTypes               |
-| /connection/enableAllTagTypes           |
-| /connection/binarylimit                 |
-| /db/listall                             |
-| /db/listallinfo                         |
-| /db/list                                |
-| /db/count                               |
-| /db/find                                |
-| /db/findadd                             |
-| /db/search                              |
-| /db/searchadd                           |
-| /db/searchaddpl                         |
-| /db/lsinfo                              |
-| /db/songinfo                            |
-| /db/listfiles                           |
-| /db/readcomments                        |
-| /db/rescan                              |
-| /db/update                              |
-| /db/getfingerprint                      |
-| /db/albumart                            |
-| /db/albumartWhole                       |
-| /db/readpicture                         |
-| /db/readpictureWhole                    |
-| /mounts/list                            |
-| /mounts/listNeighbors                   |
-| /mounts/mount                           |
-| /mounts/unmount                         |
-| /outputs/list                           |
-| /outputs/enable                         |
-| /outputs/disable                        |
-| /outputs/toggle                         |
-| /outputs/set                            |
-| /partition/list                         |
-| /partition/create                       |
-| /partition/switchTo                     |
-| /partition/delete                       |
-| /partition/moveOutputToCurrentPartition |
-| /playback/next                          |
-| /playback/prev                          |
-| /playback/pause                         |
-| /playback/resume                        |
-| /playback/toggle                        |
-| /playback/play                          |
-| /playback/playid                        |
-| /playback/stop                          |
-| /playback/seekcur                       |
-| /playback/seek                          |
-| /playback/seekid                        |
-| /playback/getvol                        |
-| /playback/consume                       |
-| /playback/crossfade                     |
-| /playback/mixrampdb                     |
-| /playback/mixrampdelay                  |
-| /playback/random                        |
-| /playback/repeat                        |
-| /playback/single                        |
-| /playback/setvol                        |
-| /playback/setReplayGain                 |
-| /playback/getReplayGain                 |
-| /playlists/get                          |
-| /playlists/list                         |
-| /playlists/listinfo                     |
-| /playlists/load                         |
-| /playlists/add                          |
-| /playlists/clear                        |
-| /playlists/deleteAt                     |
-| /playlists/move                         |
-| /playlists/rename                       |
-| /playlists/remove                       |
-| /playlists/save                         |
-| /queue/add                              |
-| /queue/addid                            |
-| /queue/clear                            |
-| /queue/info                             |
-| /queue/id                               |
-| /queue/delete                           |
-| /queue/deleteid                         |
-| /queue/move                             |
-| /queue/moveid                           |
-| /queue/find                             |
-| /queue/search                           |
-| /queue/prio                             |
-| /queue/prioid                           |
-| /queue/shuffle                          |
-| /queue/swap                             |
-| /queue/swapid                           |
-| /queue/addtagid                         |
-| /queue/cleartagid                       |
-| /queue/getChanges                       |
-| /queue/getChangesPosId                  |
-| /queue/rangeid                          |
-| /reflection/config                      |
-| /reflection/commands                    |
-| /reflection/notcommands                 |
-| /reflection/urlhandlers                 |
-| /reflection/decoders                    |
-| /status/get                             |
-| /status/clearerror                      |
-| /status/currentsong                     |
-| /status/stats                           |
-| /sticker/list                           |
-| /sticker/set                            |
-| /sticker/get                            |
-| /sticker/delete                         |
-| /sticker/deleteAll                      |
-| /sticker/find                           |
-| /sticker/search                         |
+| /mpd/native/c2c/list                               |
+| /mpd/native/c2c/subscribe                          |
+| /mpd/native/c2c/unsubscribe                        |
+| /mpd/native/c2c/sendMessage                        |
+| /mpd/native/c2c/readMessages                       |
+| /mpd/native/connection/close                       |
+| /mpd/native/connection/kill                        |
+| /mpd/native/connection/ping                        |
+| /mpd/native/connection/getTagTypes                 |
+| /mpd/native/connection/enableTagTypes              |
+| /mpd/native/connection/disableTagTypes             |
+| /mpd/native/connection/clearTagTypes               |
+| /mpd/native/connection/enableAllTagTypes           |
+| /mpd/native/connection/binarylimit                 |
+| /mpd/native/db/listall                             |
+| /mpd/native/db/listallinfo                         |
+| /mpd/native/db/list                                |
+| /mpd/native/db/count                               |
+| /mpd/native/db/find                                |
+| /mpd/native/db/findadd                             |
+| /mpd/native/db/search                              |
+| /mpd/native/db/searchadd                           |
+| /mpd/native/db/searchaddpl                         |
+| /mpd/native/db/lsinfo                              |
+| /mpd/native/db/songinfo                            |
+| /mpd/native/db/listfiles                           |
+| /mpd/native/db/readcomments                        |
+| /mpd/native/db/rescan                              |
+| /mpd/native/db/update                              |
+| /mpd/native/db/getfingerprint                      |
+| /mpd/native/db/albumart                            |
+| /mpd/native/db/albumartWhole                       |
+| /mpd/native/db/readpicture                         |
+| /mpd/native/db/readpictureWhole                    |
+| /mpd/native/mounts/list                            |
+| /mpd/native/mounts/listNeighbors                   |
+| /mpd/native/mounts/mount                           |
+| /mpd/native/mounts/unmount                         |
+| /mpd/native/outputs/list                           |
+| /mpd/native/outputs/enable                         |
+| /mpd/native/outputs/disable                        |
+| /mpd/native/outputs/toggle                         |
+| /mpd/native/outputs/set                            |
+| /mpd/native/partition/list                         |
+| /mpd/native/partition/create                       |
+| /mpd/native/partition/switchTo                     |
+| /mpd/native/partition/delete                       |
+| /mpd/native/partition/moveOutputToCurrentPartition |
+| /mpd/native/playback/next                          |
+| /mpd/native/playback/prev                          |
+| /mpd/native/playback/pause                         |
+| /mpd/native/playback/resume                        |
+| /mpd/native/playback/toggle                        |
+| /mpd/native/playback/play                          |
+| /mpd/native/playback/playid                        |
+| /mpd/native/playback/stop                          |
+| /mpd/native/playback/seekcur                       |
+| /mpd/native/playback/seek                          |
+| /mpd/native/playback/seekid                        |
+| /mpd/native/playback/getvol                        |
+| /mpd/native/playback/consume                       |
+| /mpd/native/playback/crossfade                     |
+| /mpd/native/playback/mixrampdb                     |
+| /mpd/native/playback/mixrampdelay                  |
+| /mpd/native/playback/random                        |
+| /mpd/native/playback/repeat                        |
+| /mpd/native/playback/single                        |
+| /mpd/native/playback/setvol                        |
+| /mpd/native/playback/setReplayGain                 |
+| /mpd/native/playback/getReplayGain                 |
+| /mpd/native/playlists/get                          |
+| /mpd/native/playlists/list                         |
+| /mpd/native/playlists/listinfo                     |
+| /mpd/native/playlists/load                         |
+| /mpd/native/playlists/add                          |
+| /mpd/native/playlists/clear                        |
+| /mpd/native/playlists/deleteAt                     |
+| /mpd/native/playlists/move                         |
+| /mpd/native/playlists/rename                       |
+| /mpd/native/playlists/remove                       |
+| /mpd/native/playlists/save                         |
+| /mpd/native/queue/add                              |
+| /mpd/native/queue/addid                            |
+| /mpd/native/queue/clear                            |
+| /mpd/native/queue/info                             |
+| /mpd/native/queue/id                               |
+| /mpd/native/queue/delete                           |
+| /mpd/native/queue/deleteid                         |
+| /mpd/native/queue/move                             |
+| /mpd/native/queue/moveid                           |
+| /mpd/native/queue/find                             |
+| /mpd/native/queue/search                           |
+| /mpd/native/queue/prio                             |
+| /mpd/native/queue/prioid                           |
+| /mpd/native/queue/shuffle                          |
+| /mpd/native/queue/swap                             |
+| /mpd/native/queue/swapid                           |
+| /mpd/native/queue/addtagid                         |
+| /mpd/native/queue/cleartagid                       |
+| /mpd/native/queue/getChanges                       |
+| /mpd/native/queue/getChangesPosId                  |
+| /mpd/native/queue/rangeid                          |
+| /mpd/native/reflection/config                      |
+| /mpd/native/reflection/commands                    |
+| /mpd/native/reflection/notcommands                 |
+| /mpd/native/reflection/urlhandlers                 |
+| /mpd/native/reflection/decoders                    |
+| /mpd/native/status/get                             |
+| /mpd/native/status/clearerror                      |
+| /mpd/native/status/currentsong                     |
+| /mpd/native/status/stats                           |
+| /mpd/native/sticker/list                           |
+| /mpd/native/sticker/set                            |
+| /mpd/native/sticker/get                            |
+| /mpd/native/sticker/delete                         |
+| /mpd/native/sticker/deleteAll                      |
+| /mpd/native/sticker/find                           |
+| /mpd/native/sticker/search                         |
+
+### Web APIs List
+
+| Web APIs                                |
+| --------------------------------------- |
+| TODO                               |
+
+### Client APIs List
+
+`POST`
+
+| Client APIs                                |
+| --------------------------------------- |
+| /mpd/client/connect                               |

@@ -4,7 +4,7 @@ import type { RawData } from 'ws'
 function getMessage(message?: string | RawData) {
     let data: any
     try {
-        data = JSON.parse(JSON.parse(message!.toString()))
+        data = JSON.parse(message!.toString())
     } catch (e) {
         data = undefined
     }
