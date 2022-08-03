@@ -42,14 +42,14 @@ class NativeController {
             body('commandArgs')
                 .isArray()
                 .optional()
-                .withMessage('body must be an array'),
+                .withMessage('commandArgs must be an array'),
             body('commandArgs.*')
                 .custom((value) =>
                     ['string', 'number', 'boolean'].includes(typeof value)
                 )
                 .optional()
                 .withMessage(
-                    "body's elements' type must be one of [string, number, boolean]"
+                    "commandArgs' elements' type must be one of [string, number, boolean]"
                 ),
         ]
     }

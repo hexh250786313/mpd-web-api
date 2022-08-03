@@ -17,7 +17,6 @@ class WebSocket {
             ws.on('message', (msg) => {
                 try {
                     msg = getMessage(msg)
-                    console.log(msg)
                 } catch (e) {
                     next(e)
                 }

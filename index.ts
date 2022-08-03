@@ -34,7 +34,7 @@ const mock = function (url: string) {
 
 /** 专辑列表 */
 // mock('http://127.0.0.1:8080/mpd/web/album')()
-mock('http://127.0.0.1:8080/mpd/client/url')()
+// mock('http://127.0.0.1:8080/mpd/client/connect')()
 // mock('http://127.0.0.1:8080/mpd/native/db/list')()
 
 /** 点击进某个专辑, 查看歌曲 title 和作者 artist */
