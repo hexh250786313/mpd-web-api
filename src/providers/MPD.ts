@@ -58,7 +58,7 @@ class MPD {
         return new Promise((resolve) => {
             console.log(
                 '\x1b[33m%s\x1b[0m',
-                'MPD :: Connecting to MPD. Port: ' + that.port
+                `MPD :: Connecting to MPD @ '${this.host}:${this.port}'`
             )
             ;(function attempt() {
                 // if (count === 30) {

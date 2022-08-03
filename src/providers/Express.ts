@@ -32,8 +32,7 @@ class Express {
 
     public mountErrorHandlers(): void {
         this.express = ExceptionHandler.noMPDConnectionHandler(this.express)
-        this.express.use(ExceptionHandler.logErrors)
-        this.express.use(ExceptionHandler.clientErrorHandler)
+        this.express = ExceptionHandler.addErrorHandlers(this.express)
     }
 
     public mountNativeRoutes(): void {

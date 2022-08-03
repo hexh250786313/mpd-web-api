@@ -28,12 +28,6 @@ class App {
         await MPD.init()
         Express.mountNativeRoutes()
     }
-
-    public loadServerErrorHandler(): void {
-        // @fixme:
-        // Express.mountNoMPDConnectionHandler()
-        // Express.mountErrorHandler()
-    }
 }
 
 export default new App()

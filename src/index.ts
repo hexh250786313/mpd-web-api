@@ -17,11 +17,7 @@ async function main() {
     try {
         App.loadConfiguration()
         App.loadServer()
-        // @fixme:
-        // App.loadServerErrorHandler()
-        App.loadMPDClient().then(() => {
-            //
-        })
+        App.loadMPDClient()
     } catch (error) {
         console.error(error)
         process.exit(1)

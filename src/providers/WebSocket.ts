@@ -13,13 +13,24 @@ function getMessage(message?: string | RawData) {
 
 class WebSocket {
     public static enableWebSocket(_express: WSApplication): WSApplication {
-        _express.ws(`/`, (ws) => {
+        _express.ws(`/`, (ws, _req, next) => {
             ws.on('message', (msg) => {
-                msg = getMessage(msg)
-                console.log(msg)
+                try {
+                    msg = getMessage(msg)
+                    console.log(msg)
+                } catch (e) {
+                    next(e)
+                }
             })
             ws.on('close', () => {
-                // @TODO:
+                try {
+                    // @todo:
+                } catch (e) {
+                    next(e)
+                }
+            })
+            ws.on('error', (e) => {
+                next(e)
             })
         })
 
