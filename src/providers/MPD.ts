@@ -1,13 +1,14 @@
 import type { MPDApi } from 'mpd-api'
+import type { ValueType } from '../types'
 
 import Locals from './Locals'
 import mpdApi from 'mpd-api'
 import Log from '../middlewares/Log'
 import { Router } from 'express'
 import NativeController from '../controllers/Api/Native'
-import { ValueType } from '../types'
 import WS from '../middlewares/WS'
 import { extractHostAndPort } from '../utils/extract-host-and-port'
+import { formatSong } from '../utils'
 
 export type IMPDNativeRoute = ValueType<{
     [t in keyof MPDApi.APIS]: [t, keyof MPDApi.APIS[t]]
@@ -15,6 +16,7 @@ export type IMPDNativeRoute = ValueType<{
 
 class MPD {
     public client: MPDApi.ClientAPI | null = null
+    private waiting = false
     host: string
     port: number
 
@@ -114,9 +116,34 @@ class MPD {
 
     public async listen() {
         if (WS.sendMessage) {
-            this.client?.on('system-player', async () => {
-                const status = await this.client?.api.status.get()
-                WS.sendMessage!('mpd')('player', status)
+            this.client?.on('system', async (which) => {
+                let data: any
+                switch (which) {
+                    case 'mixer':
+                    case 'player': {
+                        if (!this.waiting) {
+                            this.waiting = true
+                            data = await this.client?.api.playback.getvol()
+                            setTimeout(() => {
+                                this.waiting = false
+                            }, 50)
+                        } else {
+                            which = ''
+                        }
+                        break
+                    }
+                    case 'playlist': {
+                        data = await this.client?.api.queue.info()
+                        if (data) {
+                            data = formatSong(data)
+                        }
+                        break
+                    }
+                    default:
+                }
+                if (which) {
+                    WS.sendMessage!('mpd')(which, data)
+                }
             })
         }
         this.client?.on('close', async () => {

@@ -1,22 +1,14 @@
 import type { NextFunction, Request, Response } from 'express'
+
 import { body } from 'express-validator'
 import MPD from '../../../providers/MPD'
-import { formatSong, validated } from '../../../utils'
+import { formatSong, playSongs, validated } from '../../../utils'
 
 export class AlbumController {
     public static get(req: Request, res: Response, next: NextFunction) {
         validated({ req, res, next }, async () => {
-            const { album, artist } = req.body
-            const query = []
             let data = null
-            if (album) {
-                query.push(`(album contains '${album}')`)
-            }
-            if (Array.isArray(artist) && artist.length) {
-                artist.forEach((a) => {
-                    query.push(`(artist contains '${a}')`)
-                })
-            }
+            const query = extractQuery(req)
             try {
                 if (query.length) {
                     data = (
@@ -70,7 +62,15 @@ export class AlbumController {
         })
     }
 
-    public static getValidate() {
+    public static play({ append = false }) {
+        return (req: Request, res: Response, next: NextFunction) =>
+            validated({ req, res, next }, async () => {
+                const query = extractQuery(req)
+                await playSongs({ query, res, append })
+            })
+    }
+
+    public static validate() {
         return [
             body('album')
                 .isString()
@@ -86,4 +86,18 @@ export class AlbumController {
                 .withMessage("'artist' elements type must be string"),
         ]
     }
+}
+
+function extractQuery(req: Request) {
+    const { album, artist } = req.body
+    const query = []
+    if (album) {
+        query.push(`(album == '${album}')`)
+    }
+    if (Array.isArray(artist) && artist.length) {
+        artist.forEach((a) => {
+            query.push(`(artist == '${a}')`)
+        })
+    }
+    return query
 }

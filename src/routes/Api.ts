@@ -9,10 +9,16 @@ router.post(
     ConnectController.validate(),
     ConnectController.perform
 )
+router.post(`/web/album/get`, AlbumController.validate(), AlbumController.get)
 router.post(
-    `/web/album/get`,
-    AlbumController.getValidate(),
-    AlbumController.get
+    `/web/album/play`,
+    AlbumController.validate(),
+    AlbumController.play({ append: false })
+)
+router.post(
+    `/web/album/append`,
+    AlbumController.validate(),
+    AlbumController.play({ append: true })
 )
 router.post(`/web/playing/play`, PlayingController.perform)
 

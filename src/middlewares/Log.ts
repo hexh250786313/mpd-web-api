@@ -48,7 +48,6 @@ class Log {
     }
 
     private addLog(_kind: string, _string: string): void {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
         const _that = this
         _kind = _kind.toUpperCase()
         open(
