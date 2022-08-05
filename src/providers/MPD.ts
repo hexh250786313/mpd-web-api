@@ -8,7 +8,8 @@ import { Router } from 'express'
 import NativeController from '../controllers/Api/Native'
 import WS from '../middlewares/WS'
 import { extractHostAndPort } from '../utils/extract-host-and-port'
-import { formatSong } from '../utils'
+import { formatSong, getStoredPlaylist, throttlePromise } from '../utils'
+import { isEqual } from 'lodash'
 
 export type IMPDNativeRoute = ValueType<{
     [t in keyof MPDApi.APIS]: [t, keyof MPDApi.APIS[t]]
@@ -16,7 +17,6 @@ export type IMPDNativeRoute = ValueType<{
 
 class MPD {
     public client: MPDApi.ClientAPI | null = null
-    private waiting = false
     host: string
     port: number
 
@@ -115,23 +115,20 @@ class MPD {
     }
 
     public async listen() {
+        let cache: any
         if (WS.sendMessage) {
+            // Combining throttle and debounce, so that we can throttle the "player" / "mixer" changing and also run the last call
+            // note that throtte delay can not be too long cause it will make the debounce can not get the right last run
+            /**
+             * For the condition that mixer and player are changed at the same time ( play or pause, we just need "player" in this case )
+             * 50ms is enough to prevent the conflict
+             *  */
+            // const throttleIt = throttlePromise(50)
+            /** For invoking the last call */
+            // const doubleIt = debouncePromise(400)
             this.client?.on('system', async (which) => {
-                let data: any
+                let data: any = null
                 switch (which) {
-                    case 'mixer':
-                    case 'player': {
-                        if (!this.waiting) {
-                            this.waiting = true
-                            data = await this.client?.api.playback.getvol()
-                            setTimeout(() => {
-                                this.waiting = false
-                            }, 50)
-                        } else {
-                            which = ''
-                        }
-                        break
-                    }
                     case 'playlist': {
                         data = await this.client?.api.queue.info()
                         if (data) {
@@ -139,10 +136,26 @@ class MPD {
                         }
                         break
                     }
-                    default:
+                    case 'stored_playlist': {
+                        data = await getStoredPlaylist()
+                        break
+                    }
+                    default: {
+                        // await throttleIt(async () => {
+                        // await doubleIt(async () => {
+                        data = await this.client?.api.status.get()
+                        if (data?.bitrate) {
+                            data.bitrate = undefined
+                        }
+                        // })
+                        // })
+                        break
+                    }
                 }
-                if (which) {
+                if (!isEqual(data, cache)) {
+                    console.log('----------------', which)
                     WS.sendMessage!('mpd')(which, data)
+                    cache = data
                 }
             })
         }
