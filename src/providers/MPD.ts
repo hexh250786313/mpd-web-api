@@ -8,8 +8,8 @@ import { Router } from 'express'
 import NativeController from '../controllers/Api/Native'
 import WS from '../middlewares/WS'
 import { extractHostAndPort } from '../utils/extract-host-and-port'
-import { formatSong, getStoredPlaylist, throttlePromise } from '../utils'
-import { isEqual } from 'lodash'
+import { formatSong, getStoredPlaylist } from '../utils'
+import { isEqual } from 'lodash-es'
 
 export type IMPDNativeRoute = ValueType<{
     [t in keyof MPDApi.APIS]: [t, keyof MPDApi.APIS[t]]

@@ -26,82 +26,85 @@ Method of every native API is `POST`
 
 #### Request Example
 
-- Method: **POST**
-- URL: `/mpd/native/db/list`
-- Body:
-  - `commandArgs`: it means the arguments of mpd-api function. type: `undefined | Array<string | boolean | number>`
-    ```json
-    {
-      "commandArgs": ["date", "(artist contains 'Empire')", ["album"]] // then you get the result of mpd-api function: client.db.list("date", "(artist contains 'Empire')", ["album"])
-    }
-    ```
+-   Method: **POST**
+-   URL: `/mpd/native/db/list`
+-   Body:
+    -   `commandArgs`: it means the arguments of mpd-api function. type: `undefined | Array<string | boolean | number>`
+        ```json
+        {
+            "commandArgs": ["date", "(artist contains 'Empire')", ["album"]] // then you get the result of mpd-api function: client.db.list("date", "(artist contains 'Empire')", ["album"])
+        }
+        ```
 
 #### Response Example
 
-- Body
-  ```json
-  {
-    "code": 200, // 400 if got error from mpd-api function
-    "message": "OK", // error message if got error from mpd-api function
-    "data": [ // result from client.db.list("date", "(artist contains 'Empire')", ["album"])
-      {
-        "file": "song.ape",
-        "last_modified": "2017-01-04T17:39:57Z",
-        "format": {
-          "sample_rate": 44100,
-          "bits": 16,
-          "channels": 2,
-          "original_value": "44100:16:2"
-        },
-        "artist": "Empire",
-        "album": "album",
-        "title": "title",
-        "track": 5,
-        "genre": "Pop",
-        "time": 290,
-        "duration": 289.96
-      }
-    ]
-  }
-  ```
+-   Body
+    ```json
+    {
+        "code": 200, // 400 if got error from mpd-api function
+        "message": "OK", // error message if got error from mpd-api function
+        "data": [
+            // result from client.db.list("date", "(artist contains 'Empire')", ["album"])
+            {
+                "file": "song.ape",
+                "last_modified": "2017-01-04T17:39:57Z",
+                "format": {
+                    "sample_rate": 44100,
+                    "bits": 16,
+                    "channels": 2,
+                    "original_value": "44100:16:2"
+                },
+                "artist": "Empire",
+                "album": "album",
+                "title": "title",
+                "track": 5,
+                "genre": "Pop",
+                "time": 290,
+                "duration": 289.96
+            }
+        ]
+    }
+    ```
 
 #### API calls example
 
 1. Find the corresponding function in [mpd-api](https://github.com/cotko/mpd-api#api), for example `db.search`, the corresponding API is `/mpd/native/db/search`
 2. Pass parameters. `db.search` accepts a string parameter, for example `db.search('(artist contains "Empire")')`, the API request would be:
 
-   ```javascript
-   const { $fetch } = require('ohmyfetch')
+    ```javascript
+    const { $fetch } = require('ohmyfetch')
 
-   const mock = function (url) {
-     if (!url) {
-       throw new Error('Url required!')
-     }
+    const mock = function (url) {
+        if (!url) {
+            throw new Error('Url required!')
+        }
 
-     const _fetch = async (commandArgs) => {
-       const rawBody = { commandArgs }
-       const opts = {
-         method: 'post',
-         headers: {
-           'Content-Type': 'application/json',
-           Accept: 'application/json, text/plain, */*',
-         },
-         credentials: 'include',
-         mode: 'cors',
-         cache: 'no-cache',
-         body: JSON.parse(JSON.stringify(rawBody)),
-       }
+        const _fetch = async (commandArgs) => {
+            const rawBody = { commandArgs }
+            const opts = {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json, text/plain, */*',
+                },
+                credentials: 'include',
+                mode: 'cors',
+                cache: 'no-cache',
+                body: JSON.parse(JSON.stringify(rawBody)),
+            }
 
-       return $fetch(url, opts).then((res) => {
-         console.log(res)
-       })
-     }
+            return $fetch(url, opts).then((res) => {
+                console.log(res)
+            })
+        }
 
-     return _fetch
-   }
+        return _fetch
+    }
 
-   mock('http://127.0.0.1:8080/mpd/native/db/search')(['(artist contains "Empire")'])
-   ```
+    mock('http://127.0.0.1:8080/mpd/native/db/search')([
+        '(artist contains "Empire")',
+    ])
+    ```
 
 ### Web APIs
 
@@ -113,29 +116,28 @@ Only one api: `/mpd/client/connect`, it is used to change the `host` / `port` / 
 
 #### Request Example
 
-- Method: **POST**
-- URL: `/mpd/client/connect`
-- Body:
-  - `url`: type: `string`
-  - `password`: type: `string`
-    ```json
-    {
-      "url": "http://localhost:6600", // or "localhost:6600"
-      "password": "123456"
-    }
-    ```
+-   Method: **POST**
+-   URL: `/mpd/client/connect`
+-   Body:
+    -   `url`: type: `string`
+    -   `password`: type: `string`
+        ```json
+        {
+            "url": "http://localhost:6600", // or "localhost:6600"
+            "password": "123456"
+        }
+        ```
 
 #### Response Example
 
-- Body
-  ```json
-  {
-    "code": 200, // 400 if MPD client has been connected
-    "message": "MPD client is now listening on 'localhost:6600'",
-    "data": null // { host: 'localhost', port: 6600, disconnected: false } if MPD client has been connected
-  }
-  ```
-
+-   Body
+    ```json
+    {
+        "code": 200, // 400 if MPD client has been connected
+        "message": "MPD client is now listening on 'localhost:6600'",
+        "data": null // { host: 'localhost', port: 6600, disconnected: false } if MPD client has been connected
+    }
+    ```
 
 ## WebSocket
 
@@ -151,8 +153,8 @@ TODO
 
 All `POST`
 
-| Native API                                |
-| --------------------------------------- |
+| Native API                                         |
+| -------------------------------------------------- |
 | /mpd/native/c2c/list                               |
 | /mpd/native/c2c/subscribe                          |
 | /mpd/native/c2c/unsubscribe                        |
@@ -274,14 +276,14 @@ All `POST`
 
 ### Web APIs List
 
-| Web APIs                                |
-| --------------------------------------- |
-| TODO                               |
+| Web APIs |
+| -------- |
+| TODO     |
 
 ### Client APIs List
 
 `POST`
 
-| Client APIs                                |
-| --------------------------------------- |
-| /mpd/client/connect                               |
+| Client APIs         |
+| ------------------- |
+| /mpd/client/connect |
