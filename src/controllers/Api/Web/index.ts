@@ -1,2 +1,2 @@
 export * from './Album'
-export * from './Playing'
+export * from './Status'

@@ -8,7 +8,12 @@ import { Router } from 'express'
 import NativeController from '../controllers/Api/Native'
 import WS from '../middlewares/WS'
 import { extractHostAndPort } from '../utils/extract-host-and-port'
-import { formatSong, getStoredPlaylist } from '../utils'
+import {
+    debouncePromise,
+    formatSong,
+    getStoredPlaylist,
+    throttlePromise,
+} from '../utils'
 import { isEqual } from 'lodash-es'
 
 export type IMPDNativeRoute = ValueType<{
@@ -53,7 +58,6 @@ class MPD {
     }
 
     private async connect() {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
         const that = this
         let count = 0
         const timeout = 1
@@ -123,9 +127,9 @@ class MPD {
              * For the condition that mixer and player are changed at the same time ( play or pause, we just need "player" in this case )
              * 50ms is enough to prevent the conflict
              *  */
-            // const throttleIt = throttlePromise(50)
+            const throttleIt = throttlePromise(50)
             /** For invoking the last call */
-            // const doubleIt = debouncePromise(400)
+            const doubleIt = debouncePromise(250)
             this.client?.on('system', async (which) => {
                 let data: any = null
                 switch (which) {
@@ -141,14 +145,14 @@ class MPD {
                         break
                     }
                     default: {
-                        // await throttleIt(async () => {
-                        // await doubleIt(async () => {
-                        data = await this.client?.api.status.get()
-                        if (data?.bitrate) {
-                            data.bitrate = undefined
-                        }
-                        // })
-                        // })
+                        await throttleIt(async () => {
+                            await doubleIt(async () => {
+                                data = await this.client?.api.status.get()
+                                if (data?.bitrate) {
+                                    data.bitrate = undefined
+                                }
+                            })
+                        })
                         break
                     }
                 }

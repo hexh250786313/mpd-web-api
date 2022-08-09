@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { ConnectController } from '../controllers/Api/Client'
-import { AlbumController, PlayingController } from '../controllers/Api/Web'
+import { AlbumController, StatusController } from '../controllers/Api/Web'
 
 const router = Router()
 
@@ -20,6 +20,6 @@ router.post(
     AlbumController.validate(),
     AlbumController.play({ append: true })
 )
-router.post(`/web/playing/play`, PlayingController.perform)
+router.post(`/web/status/get`, StatusController.get)
 
 export default router
