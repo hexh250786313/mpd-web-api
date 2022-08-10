@@ -156,6 +156,7 @@ class MPD {
                         break
                     }
                 }
+                // @fixme: 00:00 -> 00:00 not sending
                 if (!isEqual(data, cache)) {
                     console.log('----------------', which)
                     WS.sendMessage!('mpd')(which, data)
