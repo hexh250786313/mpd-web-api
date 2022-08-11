@@ -14,7 +14,6 @@ import {
     getStoredPlaylist,
     throttlePromise,
 } from '../utils'
-import { isEqual } from 'lodash-es'
 
 export type IMPDNativeRoute = ValueType<{
     [t in keyof MPDApi.APIS]: [t, keyof MPDApi.APIS[t]]
@@ -119,7 +118,6 @@ class MPD {
     }
 
     public async listen() {
-        let cache: any
         if (WS.sendMessage) {
             // Combining throttle and debounce, so that we can throttle the "player" / "mixer" changing and also run the last call
             // note that throtte delay can not be too long cause it will make the debounce can not get the right last run
@@ -148,20 +146,13 @@ class MPD {
                         await throttleIt(async () => {
                             await doubleIt(async () => {
                                 data = await this.client?.api.status.get()
-                                if (data?.bitrate) {
-                                    data.bitrate = undefined
-                                }
                             })
                         })
                         break
                     }
                 }
-                // @fixme: 00:00 -> 00:00 not sending
-                if (!isEqual(data, cache)) {
-                    console.log('----------------', which)
-                    WS.sendMessage!('mpd')(which, data)
-                    cache = data
-                }
+                console.log('----------------', which)
+                WS.sendMessage!('mpd')(which, data)
             })
         }
         this.client?.on('close', async () => {
