@@ -40,12 +40,18 @@ async function start(watch) {
         target: 'node10.12',
         outfile: 'lib/index.js',
         plugins: [
-            dirnamePlugin,
+            // dirnamePlugin,
             copy({
-                assets: {
-                    from: ['.env'],
-                    to: ['.env'],
-                },
+                assets: [
+                    {
+                        from: ['.env'],
+                        to: ['.env'],
+                    },
+                    {
+                        from: ['./node_modules/mpd-api/lib/api/spec/*'],
+                        to: ['./spec/*'],
+                    },
+                ],
             }),
         ],
     })
